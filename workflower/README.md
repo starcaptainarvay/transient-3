@@ -1,6 +1,24 @@
 # Workflower
-
+#### by [starcaptainarvay](https://github.com/starcaptainarvay)
 The `workflower` library is designed to create and manage a directed graph of computational cells, allowing conditional branching based on the return values of cell functions. This library is useful for workflows, state machines, or any process where the flow of execution can change dynamically.
+
+## Table of Contents
+
+- [Key Concepts and Components](#key-concepts-and-components)
+  - [WorkflowerOptions](#workfloweroptions)
+  - [Workflower Class](#workflower-class)
+  - [Cells](#cells)
+  - [Bucket Class](#bucket-class)
+- [Installation](#installation)
+- [Usage](#usage)
+  - [Creating a New Workflower Instance](#creating-a-new-workflower-instance)
+  - [Adding and Retrieving Cells](#adding-and-retrieving-cells)
+  - [Executing the Workflow](#executing-the-workflow)
+  - [Using Buckets](#using-buckets)
+- [Practical Example: Customer Order Processing Workflow](#example-customer-order-processing-workflow)
+  - [Applying Buckets for Logging](#practical-example-logging-order-details)
+- [License](#license)
+
 
 ## Key Concepts and Components
 
@@ -243,3 +261,18 @@ processOrderAndLog("Order #12345")
 order_log_bucket:get() -- Order #12345
 ```
 **Note** that this would only work if `receive_order` didn't explicitly return its next cell, and instead returned `nil`. When a cell returns `nil` as the first value, the workflow defaults to the order specified in the options it is constructed with.
+
+## License
+Copyright (c) 2024 Avyay Natarajan. (@starcaptainarvay)
+
+All rights reserved.
+
+This software and associated documentation files (the "Software") may not be used, copied, modified, merged, published, distributed, sublicensed, or sold without prior written permission from the copyright holder.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
