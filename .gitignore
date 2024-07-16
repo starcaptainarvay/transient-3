@@ -1,0 +1,10 @@
+# dev environment specific
+.vscode
+.vscode/*
+.vscode*
+
+# any ideas that are demoed in pseudocode over call
+sketching/*
+/sketching/*
+./sketching/*
+
