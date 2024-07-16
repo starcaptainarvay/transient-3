@@ -1,14 +1,15 @@
+--- Workflower module implementation
+
 local bucket        = require("workflower.bucket")
 local pipe          = require("workflower.pipe")
 local stringify     = require("workflower.stringify")
+
 local workflower    = {}
 
-local get_instance_content = {}
-
-local reserved_indexes = {
+local reserved_indexes, get_instance_content = {
     [1] = true, -- entry point
     [2] = true -- directed graph, in the form of a node list
-}
+}, {}
 
 function workflower.new(options, ...)
     local parents = {...}
