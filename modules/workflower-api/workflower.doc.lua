@@ -58,7 +58,7 @@ function workflower.execute(cell, call_index, ...) end
 --- Wraps a regular function into a Workflower cell function.
 --- This utility function can be used to adapt regular functions into the Workflower cell format.
 ---@param cell_fn function The function to wrap.
----@param next_cell nil | string | function If nil, goes to the next cell in the graph. 
+---@param next_cell? nil | string | function If nil, goes to the next cell in the graph. 
 ---A string provides the key for the next cell, a function takes the arguments passed into cell_fn and returns the key for the next cell.
 ---@return function The wrapped cell function.
 function workflower.cellify(cell_fn, next_cell) end
