@@ -35,7 +35,7 @@ function queue.push(self, item)
 end
 
 local function string_and_indent(v)
-    return tostring(v):gsub("\t", "\t\t"):gsub("\n", "\n\t")
+    return tostring(v):gsub("\n", "\n\t")
 end
 
 function queue.__tostring(self)

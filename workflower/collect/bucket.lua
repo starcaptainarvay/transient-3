@@ -28,7 +28,7 @@ end
 
 local function string_and_indent(v)
     if v == nil then return "" end
-    return tostring(v):gsub("\t", "\t\t"):gsub("\n", "\n\t")
+    return tostring(v):gsub("\n", "\n\t")
 end
 
 function bucket.__tostring(self)
