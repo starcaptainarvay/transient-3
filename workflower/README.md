@@ -17,6 +17,8 @@ The `workflower` library is designed to create and manage a directed graph of co
   - [Using Buckets](#using-buckets)
 - [Practical Example: Customer Order Processing Workflow](#example-customer-order-processing-workflow)
   - [Applying Buckets for Logging](#practical-example-logging-order-details)
+- [Debugging](#debugging-cells)
+  - [Debugging cells](#debugging-cells)
 - [License](#license)
 
 
