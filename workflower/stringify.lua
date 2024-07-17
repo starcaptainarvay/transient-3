@@ -25,9 +25,10 @@ local function graph_tostring(graph)
         content = content .. prefix .. "\n"
     end
 
-    add_single(graph[1], "\t")
+    local entry = format_node(graph[1])
+    add_single(entry, "\t")
 
-    local midpoint  = math.floor(string.len(format_node(graph[1])) / 2)
+    local midpoint  = math.floor(string.len(entry) / 2)
     local spacing   = string.rep(" ", midpoint)
     local prefix    = "\t" .. spacing .. "|"
 
