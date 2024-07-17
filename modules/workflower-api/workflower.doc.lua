@@ -134,10 +134,100 @@ return ---@type fun(options: WorkflowerOptions, ...: any): Workflower
 {
     --- Creates a new Workflower instance.
     new = workflower.new,
+
     --- Creates a new Bucket instance for storing the output at any point in the workflow.
     bucket = workflower.bucket,
+
     --- Creates a new cell instance that pipes output into a function outside of the workflow.
     pipe = workflower.pipe,
+
     --- Wraps a Workflower cell into a debugger that outputs an accurate trace on error.
     debug = workflower.debug,
+
+    --- Debugging constants and configurations
+    debugging = {
+        --- Formatting table
+        formatting = {
+            --- Reset formatting
+            reset = 'reset',
+
+            --- Bold formatting
+            bold = 'bold',
+
+            --- Dim formatting
+            dim = 'dim',
+
+            --- Italic formatting
+            italic = 'italic',
+
+            --- Underline formatting
+            underline = 'underline',
+
+            --- Blink formatting
+            blink = 'blink',
+
+            --- Reverse formatting
+            reverse = 'reverse',
+
+            --- Hidden formatting
+            hidden = 'hidden',
+
+            --- Strikethrough formatting
+            strikethrough = 'strikethrough',
+
+            --- Foreground black
+            fg_black = 'fg_black',
+
+            --- Foreground red
+            fg_red = 'fg_red',
+
+            --- Foreground green
+            fg_green = 'fg_green',
+
+            --- Foreground yellow
+            fg_yellow = 'fg_yellow',
+
+            --- Foreground blue
+            fg_blue = 'fg_blue',
+
+            --- Foreground magenta
+            fg_magenta = 'fg_magenta',
+
+            --- Foreground cyan
+            fg_cyan = 'fg_cyan',
+
+            --- Foreground white
+            fg_white = 'fg_white',
+
+            --- Background black
+            bg_black = 'bg_black',
+
+            --- Background red
+            bg_red = 'bg_red',
+
+            --- Background green
+            bg_green = 'bg_green',
+
+            --- Background yellow
+            bg_yellow = 'bg_yellow',
+
+            --- Background blue
+            bg_blue = 'bg_blue',
+
+            --- Background magenta
+            bg_magenta = 'bg_magenta',
+
+            --- Background cyan
+            bg_cyan = 'bg_cyan',
+
+            --- Background white
+            bg_white = 'bg_white'
+        },
+
+        --- Formats a string with the given formatting options.
+        ---@param str string The string to format.
+        ---@param ... string List of formatting options.
+        ---@return string The formatted string.
+        format = function(str, ...) end
+    }
 }

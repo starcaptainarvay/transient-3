@@ -94,6 +94,13 @@ function workflower.execute(cell, call_index, ...)
     local _next, results = cell:pass(call_index, ...)
     local _next_cell = workflower.get_cell(cell.flower, _next)
 
+    if _next == "error" then
+        local err_string = results[1]
+        if not _next_cell then -- no error handler
+            error(err_string, 2)
+        end
+    end
+
     if _next_cell then
         return workflower.execute(_next_cell, call_index + 1, unpack(results))
     end
@@ -112,6 +119,11 @@ end
 function workflower.debug(fn)
     return debug.debug_cell_container(fn)
 end
+
+workflower.debugging = {
+    formatting = debug.formatting,
+    format = debug.format
+}
 
 local function get_lib_content(self, key)
     return workflower[key]
