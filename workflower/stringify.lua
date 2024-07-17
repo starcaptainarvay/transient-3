@@ -9,7 +9,7 @@ local function graph_tostring(graph)
 
     local function add_single(node, prefix)
         content = content .. prefix
-        content = content .. debug.format(format_node(node), debug.formatting.presets.fg_blue, debug.formatting.presets.bold) .. "\n"
+        content = content .. debug.format(node, debug.formatting.presets.fg_blue, debug.formatting.presets.bold) .. "\n"
     end
 
     local function add_multiple(nodes, prefix)
@@ -36,10 +36,13 @@ local function graph_tostring(graph)
     for i=2, #graph do
         local node = graph[i]
         if type(node) == "string" then
-            add_single(node, "\t")
+            local single = format_node(node)
+            local mpoint = math.floor(string.len(single) / 2)
+            local adjust = math.max(midpoint - mpoint, 0)
+            add_single(single, "\t" .. string.rep(" ", adjust))
         else add_multiple(node, prefix) end
         if i < #graph then
-            add_line(prefix)    
+            add_line(prefix)
         end
     end
 
