@@ -1,6 +1,8 @@
 package.path = package.path .. ";./workflower/?.lua"
 
 local flower = require('workflower')
+local workflower = require("workflower")
+local b, f = flower.bucket('next')
 
 local function adder(a, b, i)
     return nil, a + b, b, i + 1
@@ -21,29 +23,42 @@ local function recursiveDone(a, b)
     return nil, a
 end
 
-function love.load()
-    local threesum = flower({
-        'adder1',
-        {'adder1', 'adder2', 'adder3'},
-        adder1 = adder,
-        adder2 = adder,
-        adder3 = adder
-    })
 
-    local storage, cell = flower.bucket('pipeToPrint')
-
-    local recursiveAdd = flower({
-        'recursiveAdder',
-        {'recursiveAdder', {'recursiveAdder', 'recursiveAdderStorage'}, {'pipeToPrint'}, {'recursiveAdder', 'done'}},
-        recursiveAdder = recursiveAdder,
-        pipeToPrint = flower.pipe('recursiveAdder', function(...) print("Printing...", ...) end),
-        recursiveAdderStorage = cell,
-        done = recursiveDone
-    })
-
-    print(threesum(5, 2, 1))
-    print(recursiveAdd(1, 1))
-    print(storage:get())
-
-    print(recursiveAdd)
+local function divideByZero(a, b, i)
+    -- return nil, a, b, i
+    return nil, g / 0, i
 end
+
+local threesum = flower({
+    'adder1',
+    {'adder1', 'adder2', 'divZero', 'adder3'},
+    adder1 = adder,
+    adder2 = adder,
+    divZero = workflower.debug(divideByZero),
+    adder3 = adder,
+    error = function(e, results)
+        print("BEEP BEEP BEEP!!! THREESUM ERRIOR!!!", e)
+        print("results", unpack(results))
+    end
+})
+
+local storage, cell = flower.bucket('pipeToPrint')
+storage:get()
+
+local recursiveAdd = flower({
+    'recursiveAdder',
+    {'recursiveAdder', {'recursiveAdder', 'recursiveAdderStorage'}, {'pipeToPrint'}, {'recursiveAdder', 'done'}},
+    recursiveAdder = recursiveAdder,
+    pipeToPrint = flower.pipe('recursiveAdder', function(...) print("Printing...", ...) end),
+    recursiveAdderStorage = cell,
+    done = recursiveDone,
+    error = function(err, ...)
+        print("BEEP BEEP BEEP!!! ERROR OCCURERED IN RECURSIVEADD!!!!", err, ...)
+    end
+})
+
+print(threesum(5, 2, 1))
+-- print(recursiveAdd(1, 1))
+-- print(storage:get())
+
+-- print(recursiveAdd)
