@@ -1,11 +1,14 @@
 --- Workflower module implementation
 
-local bucket        = require("workflower.bucket")
-local pipe          = require("workflower.pipe")
-local stringify     = require("workflower.stringify")
-local debug         = require("workflower.debug")
+local bucket, pipe, queue   = require("workflower.collect.bucket"),
+                            require("workflower.collect.pipe"),
+                            require("workflower.collect.queue")
 
-local workflower    = {}
+local stringify             = require("workflower.stringify")
+local debug                 = require("workflower.debug")
+local event                 = require("workflower.event")
+
+local workflower            = {}
 
 local reserved_indexes, get_instance_content = {
     [1] = true, -- entry point
@@ -65,7 +68,10 @@ end
 
 local get_instance_content_defaults = {
     cell = true,
-    get_cell = true
+    get_cell = true,
+    on = event.observable.on,
+    once = event.observable.once,
+    dispatch = event.observable.dispatch
 }
 
 local get_instance_content_raw = {
@@ -114,6 +120,10 @@ end
 
 function workflower.pipe(_next, fn)
     return pipe.new(_next, fn)
+end
+
+function workflower.queue(_next)
+    return queue.new(_next)
 end
 
 function workflower.debug(fn)
