@@ -153,7 +153,8 @@ end
 
 local __meta = {
     __call = function(_, ...) return workflower.new(...) end,
-    __index = get_lib_content
+    __index = get_lib_content,
+    __newindex = function() end
 }
 
 return setmetatable({}, __meta)
