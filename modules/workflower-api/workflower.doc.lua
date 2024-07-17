@@ -163,6 +163,10 @@ function workflower.bucket(_next) end
 ---@return Queue, function The new Queue instance and its corresponding cell function.
 function workflower.queue(_next) end
 
+--- Creates a new Observable instance
+---@return Observable the Observable instance
+function workflower.observable() end
+
 --- Debugger class.
 ---@class Debugger
 local debugger = {}
@@ -207,6 +211,15 @@ return ---@type fun(options: WorkflowerOptions, ...: any): Workflower
 
     --- Wraps a Workflower cell into a debugger that outputs an accurate trace on error.
     debug = workflower.debug,
+
+    --- Creates an observable object from which you can observe and dispatch events
+    observable = workflower.observable,
+
+    --- Global event library, which is also an instance of Observable,
+    --- @type Observable
+    event = {
+        observable = Observable
+    },
 
     --- Debugging constants and configurations
     debugging = {

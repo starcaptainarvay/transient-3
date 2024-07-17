@@ -43,3 +43,7 @@ print(queue)
 --         render(renderQueue:pop())
 --     end
 -- end
+
+local o = flower.observable()
+o:on("render", print)
+o:dispatch("ren")
