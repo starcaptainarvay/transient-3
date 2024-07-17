@@ -262,6 +262,58 @@ order_log_bucket:get() -- Order #12345
 ```
 **Note** that this would only work if `receive_order` didn't explicitly return its next cell, and instead returned `nil`. When a cell returns `nil` as the first value, the workflow defaults to the order specified in the options it is constructed with.
 
+## Debugging Cells
+
+The `workflower.debug` function allows you to debug individual cells by wrapping them in a debug container. This can help you trace errors and understand the flow of your workflower.
+
+### Usage
+
+To use the `workflower.debug` function, simply wrap your cell function with it when defining your workflower. Here is an example using the customer order processing workflow:
+
+#### Example Workflow
+
+```lua
+local workflower = require("workflower")
+
+local function process_payment(order)
+    print("Processing payment for:", order)
+    -- Simulate an error
+    error("Payment processing failed!")
+    return "finish_order", order
+end
+
+-- Create a new workflower instance
+local wf = workflower({
+    "receive_order",
+    {"receive_order", "log_order", "process_payment", "finish_order"},
+    process_payment = workflower.debug(process_payment),
+}, processOrder)
+
+-- Execute the workflower with an order
+wf({id = "Order #12345", items = {"item1", "item2"}})
+```
+
+Output with `process_payment`: 
+```
+lua: main.lua:20: Payment processing failed!
+stack traceback:
+    [C]: in function 'error'
+    [string "workflower"]:35: in function <[string "workflower"]:34>
+    [string "workflower"]:50: in function 'execute'
+    main.lua:20: in function <main.lua:15>
+    ...
+```
+
+Output with `workflower.debug(process_payment)`:
+```
+Failure in Cell 'process_payment':
+    process_payment.lua:5: Payment processing failed!
+stack traceback:
+    process_payment.lua:5: in function 'process_payment'
+    ...
+```
+
+
 ## License
 Copyright (c) 2024 Avyay Natarajan. (@starcaptainarvay)
 

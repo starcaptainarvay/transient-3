@@ -102,9 +102,42 @@ function pipe.new(_next, fn) end
 ---@return function The new pipe function.
 function workflower.pipe(_next, fn) end
 
+--- Debugger class.
+---@class Debugger
+local debugger = {}
+
+--- Logs an error and formats the traceback.
+---@param id string The identifier of the cell where the error occurred.
+---@param flower Workflower The workflower instance.
+---@param traceback string The traceback string.
+function debugger.error(id, flower, traceback) end
+
+--- Creates a debug cell container.
+---@param fn function The function to be debugged.
+---@return table The debug cell container.
+function debugger.debug_cell_container(fn) end
+
+--- Transforms a cell function into a debug cell.
+---@param debug_object table The debug object containing the function to debug.
+---@param cell_id string The identifier of the cell.
+---@param flower Workflower The workflower instance.
+---@return function The transformed debug cell function.
+function debugger.debug_cell(debug_object, cell_id, flower) end
+
+--- Wraps a Workflower cell into a debugger that outputs an accurate trace on error.
+---@param cell function The cell function being wrapped
+---@return table The debugger cell container wrapping 'cell'
+function workflower.debug(cell) end
+
+
 return ---@type fun(options: WorkflowerOptions, ...: any): Workflower
 {
+    --- Creates a new Workflower instance.
     new = workflower.new,
+    --- Creates a new Bucket instance for storing the output at any point in the workflow.
     bucket = workflower.bucket,
-    pipe = workflower.pipe
+    --- Creates a new cell instance that pipes output into a function outside of the workflow.
+    pipe = workflower.pipe,
+    --- Wraps a Workflower cell into a debugger that outputs an accurate trace on error.
+    debug = workflower.debug,
 }

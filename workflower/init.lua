@@ -3,6 +3,7 @@
 local bucket        = require("workflower.bucket")
 local pipe          = require("workflower.pipe")
 local stringify     = require("workflower.stringify")
+local debug         = require("workflower.debug")
 
 local workflower    = {}
 
@@ -33,6 +34,12 @@ function workflower.new(options, ...)
 end
 
 function workflower.cell(flower, id, fn)
+    if type(fn) == "table" then
+        if fn.is_debug_cell_container then
+            fn = debug.debug_cell(fn, id, flower)
+        end
+    end
+
     local function _pass(self, call_index, ...)
         local results = {fn(...)}
         local _next = table.remove(results, 1)
@@ -100,6 +107,10 @@ end
 
 function workflower.pipe(_next, fn)
     return pipe.new(_next, fn)
+end
+
+function workflower.debug(fn)
+    return debug.debug_cell_container(fn)
 end
 
 local function get_lib_content(self, key)
