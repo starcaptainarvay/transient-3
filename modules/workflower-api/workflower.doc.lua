@@ -55,8 +55,33 @@ function workflower.__call(self, ...) end
 ---@return any The final results of the execution.
 function workflower.execute(cell, call_index, ...) end
 
+--- Event system for observables.
+---@class Observable
+local Observable = {}
+
+--- Creates a new observable instance.
+---@return Observable The new observable instance.
+function Observable.new() end
+
+--- Registers an event listener that triggers every time the event is dispatched.
+---@param event string The name of the event.
+---@param callback function The function to call when the event is dispatched.
+---@return table A handle to the event listener, which can be used to disconnect it.
+function Observable.on(self, event, callback) end
+
+--- Registers an event listener that triggers only once the next time the event is dispatched.
+---@param event string The name of the event.
+---@param callback function The function to call when the event is dispatched.
+---@return table A handle to the event listener, which can be used to disconnect it.
+function Observable.once(self, event, callback) end
+
+--- Dispatches an event to all registered listeners.
+---@param event string The name of the event.
+---@param ... any Additional arguments to pass to the event listeners.
+function Observable.dispatch(self, event, ...) end
+
 --- Bucket class.
----@class Bucket
+---@class Bucket : Observable
 ---@field contents any Contains the current bucket contents, can be retrieved with @Bucket:get().
 local Bucket = {}
 
@@ -68,7 +93,7 @@ local Bucket = {}
 ---@return Bucket, function The new Bucket instance and its corresponding cell function.
 function Bucket.new(_next) end
 
---- Gets the contents of the Bucket
+--- Gets the contents of the Bucket.
 ---@param self Bucket
 ---@return any The contents of the Bucket.
 function Bucket.get(self) end
@@ -78,13 +103,39 @@ function Bucket.get(self) end
 ---@param ... any The contents to set in the Bucket.
 function Bucket.set(self, ...) end
 
---- Creates a new Bucket instance.
---- A Bucket is a simple state wrapper with an associated cell function that 
---- can be called in a Workflower chain to push the current input/output into a 
---- bucket on the side without disrupting the flow.
+--- Queue class.
+---@class Queue : Observable
+---@field list table Contains the list of queued items.
+local Queue = {}
+
+--- Creates a new Queue instance.
+--- A Queue is a data structure that holds multiple items in a first-in-first-out (FIFO) manner.
+--- It can be used in a Workflower chain to collect a series of outputs without disrupting the flow.
 ---@param _next string The next cell identifier.
----@return Bucket, function The new Bucket instance and its corresponding cell function.
-function workflower.bucket(_next) end
+---@return Queue, function The new Queue instance and its corresponding cell function.
+function Queue.new(_next) end
+
+--- Gets the size of the Queue.
+---@param self Queue
+---@return number The number of items in the Queue.
+function Queue.size(self) end
+
+--- Gets an item from the Queue.
+---@param self Queue
+---@param i number The index of the item to retrieve.
+---@return any The item at the specified index.
+function Queue.get(self, i) end
+
+--- Pops the first item from the Queue.
+---@param self Queue
+---@return any The first item in the Queue.
+function Queue.pop(self) end
+
+--- Pushes an item onto the Queue.
+---@param self Queue
+---@param item any The item to push onto the Queue.
+function Queue.push(self, item) end
+
 
 --- Pipe class.
 ---@class Pipe
@@ -101,6 +152,16 @@ function pipe.new(_next, fn) end
 ---@param fn function The function to execute for this pipe.
 ---@return function The new pipe function.
 function workflower.pipe(_next, fn) end
+
+--- Creates a new Bucket instance for storing the output at any point in the workflow.
+---@param _next string The next cell identifier.
+---@return Bucket, function The new Bucket instance and its corresponding cell function.
+function workflower.bucket(_next) end
+
+--- Creates a new Queue instance for collecting multiple outputs in a FIFO manner.
+---@param _next string The next cell identifier.
+---@return Queue, function The new Queue instance and its corresponding cell function.
+function workflower.queue(_next) end
 
 --- Debugger class.
 ---@class Debugger
@@ -137,6 +198,9 @@ return ---@type fun(options: WorkflowerOptions, ...: any): Workflower
 
     --- Creates a new Bucket instance for storing the output at any point in the workflow.
     bucket = workflower.bucket,
+
+    --- Creates a new Queue instance for storing the output at any point in the workflow.
+    queue = workflower.queue,
 
     --- Creates a new cell instance that pipes output into a function outside of the workflow.
     pipe = workflower.pipe,

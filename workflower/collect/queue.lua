@@ -1,5 +1,6 @@
 local debug = require("workflower.debug")
 local event = require("workflower.event")
+local util  = require("collect.util")
 
 local queue = {}
 queue.__index = queue
@@ -33,6 +34,10 @@ function queue.push(self, item)
     self:dispatch("value", unpack(item))
 end
 
+local function string_and_indent(v)
+    return tostring(v):gsub("\t", "\t\t"):gsub("\n", "\n\t")
+end
+
 function queue.__tostring(self)
     local open, close = debug.format("Queue {", debug.formatting.presets.fg_green, debug.formatting.presets.bold),
         debug.format("}", debug.formatting.presets.fg_green, debug.formatting.presets.bold)
@@ -41,7 +46,7 @@ function queue.__tostring(self)
     for i = 1, self:size() do
         content = content .. debug.format("\t(  ", debug.formatting.presets.fg_blue)
         content = content .. debug.format(
-            table.concat(self.list[i], ",\t\t"),
+            table.concat(util.map(self.list[i], string_and_indent), ",\t\t"),
             debug.formatting.presets.fg_white,
             debug.formatting.presets.bold)
         content = content .. debug.format("  )", debug.formatting.presets.fg_blue)
@@ -53,7 +58,7 @@ function queue.__tostring(self)
 
     content = content .. "\n"
 
-    return "\n" .. open .. content .. close .. "\n"
+    return open .. content .. close
 end
 
 queue.on           = event.observable.on
