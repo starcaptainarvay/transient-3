@@ -107,4 +107,13 @@ function transient.update()
     update_systems(_systems)
 end
 
-return transient
+local __meta = {}
+function __meta.__index(self, key)
+    if string.sub(key, 1) == "_" then
+        return nil
+    end
+
+    return transient[key]
+end
+
+return setmetatable({}, __meta)
