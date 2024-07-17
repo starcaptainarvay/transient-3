@@ -55,6 +55,14 @@ function workflower.__call(self, ...) end
 ---@return any The final results of the execution.
 function workflower.execute(cell, call_index, ...) end
 
+--- Wraps a regular function into a Workflower cell function.
+--- This utility function can be used to adapt regular functions into the Workflower cell format.
+---@param cell_fn function The function to wrap.
+---@param next_cell nil | string | function If nil, goes to the next cell in the graph. 
+---A string provides the key for the next cell, a function takes the arguments passed into cell_fn and returns the key for the next cell.
+---@return function The wrapped cell function.
+function workflower.cellify(cell_fn, next_cell) end
+
 --- Event system for observables.
 ---@class Observable
 local Observable = {}
@@ -199,6 +207,11 @@ return ---@type fun(options: WorkflowerOptions, ...: any): Workflower
 {
     --- Creates a new Workflower instance.
     new = workflower.new,
+
+
+    --- Wraps a regular function into a Workflower cell function.
+    --- This utility function can be used to adapt regular functions into the Workflower cell format.
+    cellify = workflower.cellify,
 
     --- Creates a new Bucket instance for storing the output at any point in the workflow.
     bucket = workflower.bucket,

@@ -36,6 +36,28 @@ function workflower.new(options, ...)
     return flower
 end
 
+local function create_key_function(next_cell)
+    if type(next_cell) == "string" then
+        return function()
+            return next_cell
+        end
+    elseif type(next_cell) == "function" then
+        return function(...)
+            return next_cell(...)
+        end
+    else
+        return function() return nil end
+    end
+end
+
+function workflower.cellify(cell_fn, next_cell)
+    local key = create_key_function(next_cell)
+
+    return function(...)
+        return key(...), cell_fn(...)
+    end
+end
+
 function workflower.cell(flower, id, fn)
     if type(fn) == "table" then
         if fn.is_debug_cell_container then
