@@ -130,9 +130,21 @@ function workflower.debug(fn)
     return debug.debug_cell_container(fn)
 end
 
+function workflower.observable()
+    return event.observable.new()
+end
+
 workflower.debugging = {
     formatting = debug.formatting,
     format = debug.format
+}
+
+workflower.event = {
+    _events = {},
+    dispatch = event.dispatch,
+    on = event.on,
+    once = event.once,
+    observable = event.observable
 }
 
 local function get_lib_content(self, key)
