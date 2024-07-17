@@ -17,6 +17,7 @@ end
 function System:removeEntity(entity)
     for index, component in pairs(self._entities) do
         if component.entity == entity then
+            self:destroy(component, entity)
             return table.remove(self._entities, index)
         end
     end
@@ -35,6 +36,8 @@ end
 
 function System:init(componentData, entity) end
 function System:update(componentData, entity) end
+
+function System:destroy(componentData, entity) end
 function System:initSystem() end
 function System:updateSystem() end
 
