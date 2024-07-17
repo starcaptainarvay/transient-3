@@ -9,7 +9,7 @@ local function adder(a, b, i)
 end
 
 local function recursiveAdder(a, b)
-    print(string.format('adding %d to %d', b, a))
+    -- print(string.format('adding %d to %d', b, a))
     local _next = 'recursiveAdder'
     if a % 4 == 0 then
         _next = 'recursiveAdderStorage'
@@ -24,17 +24,11 @@ local function recursiveDone(a, b)
 end
 
 
-local function divideByZero(a, b, i)
-    -- return nil, a, b, i
-    return nil, g / 0, i
-end
-
 local threesum = flower({
     'adder1',
     {'adder1', 'adder2', 'divZero', 'adder3'},
     adder1 = adder,
     adder2 = adder,
-    divZero = workflower.debug(divideByZero),
     adder3 = adder,
     error = function(e, results)
         print("BEEP BEEP BEEP!!! THREESUM ERRIOR!!!", e)
@@ -42,23 +36,33 @@ local threesum = flower({
     end
 })
 
-local storage, cell = flower.bucket('pipeToPrint')
-storage:get()
+local storage, cell = flower.queue('recursivebucket')
+local storage2, cell2 = flower.bucket('recursiveAdder')
 
 local recursiveAdd = flower({
     'recursiveAdder',
-    {'recursiveAdder', {'recursiveAdder', 'recursiveAdderStorage'}, {'pipeToPrint'}, {'recursiveAdder', 'done'}},
+    {'recursiveAdder', {'recursiveAdder', 'recursiveAdderStorage'}, {'recursiveAdder', 'done'}},
     recursiveAdder = recursiveAdder,
-    pipeToPrint = flower.pipe('recursiveAdder', function(...) print("Printing...", ...) end),
     recursiveAdderStorage = cell,
+    recursivebucket = cell2,
     done = recursiveDone,
     error = function(err, ...)
         print("BEEP BEEP BEEP!!! ERROR OCCURERED IN RECURSIVEADD!!!!", err, ...)
     end
 })
 
-print(threesum(5, 2, 1))
--- print(recursiveAdd(1, 1))
--- print(storage:get())
+storage:on("value", function(...)
+    print("size:", storage:size(), "tail:", ...)
+end)
 
--- print(recursiveAdd)
+-- print(threesum(5, 2, 1))
+-- print(recursiveAdd(1, 1))
+
+print(recursiveAdd)
+
+for i=1, 3 do
+    recursiveAdd(i, i)
+end
+
+print(storage)
+print(storage2)
