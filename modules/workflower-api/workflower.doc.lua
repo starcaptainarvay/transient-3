@@ -181,6 +181,12 @@ return ---@type fun(options: WorkflowerOptions, ...: any): Workflower
             --- Foreground red
             fg_red = 'fg_red',
 
+            --- Foreground bright red
+            fg_bright_red = 'fg_bright_red',
+
+            --- Foreground orange
+            fg_orange = 'fg_orange',
+
             --- Foreground green
             fg_green = 'fg_green',
 
@@ -204,6 +210,12 @@ return ---@type fun(options: WorkflowerOptions, ...: any): Workflower
 
             --- Background red
             bg_red = 'bg_red',
+
+            --- Background bright red
+            bg_bright_red = 'bg_bright_red',
+
+            --- Background orange
+            bg_orange = 'bg_orange',
 
             --- Background green
             bg_green = 'bg_green',

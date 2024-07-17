@@ -15,6 +15,8 @@ debugger.formatting.presets = {
     strikethrough = 'strikethrough',
     fg_black = 'fg_black',
     fg_red = 'fg_red',
+    fg_bright_red = 'fg_bright_red',
+    fg_orange = 'fg_orange',
     fg_green = 'fg_green',
     fg_yellow = 'fg_yellow',
     fg_blue = 'fg_blue',
@@ -23,6 +25,8 @@ debugger.formatting.presets = {
     fg_white = 'fg_white',
     bg_black = 'bg_black',
     bg_red = 'bg_red',
+    bg_bright_red = 'bg_bright_red',
+    bg_orange = 'bg_orange',
     bg_green = 'bg_green',
     bg_yellow = 'bg_yellow',
     bg_blue = 'bg_blue',
@@ -66,9 +70,10 @@ function debugger.error_string(id, flower, traceback)
     end
 
     local cleaned_traceback_str = table.concat(cleaned_traceback, "\n")
-    local cell_name = ("Cell '%s'"):format(_format(id, {presets.bold}))
-    local leading_message = ("Failure in %s:"):format(_format(cell_name, {presets.fg_white, presets.blink}))
-    local err_string = string.format("\n%s\n\t%s", _format(leading_message, {presets.bg_red}), cleaned_traceback_str)
+    local cell_name = _format(id, {presets.fg_white, presets.bold})
+    local failure_in_cell = _format("Failure", {presets.bold, presets.fg_bright_red, presets.bg_black}) .. _format(" in Cell '", {presets.fg_bright_red})
+    local leading_message = failure_in_cell .. cell_name .. _format("':", {presets.fg_bright_red})
+    local err_string = string.format("\n%s\n\t%s", _format(leading_message, {presets.fg_bright_red}), cleaned_traceback_str)
 
     return err_string
 end
