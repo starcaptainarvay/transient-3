@@ -19,6 +19,9 @@ The `workflower` library is designed to create and manage a directed graph of co
   - [Applying Buckets for Logging](#practical-example-logging-order-details)
 - [Debugging](#debugging-cells)
   - [Debugging cells](#debugging-cells)
+- [Events](#events-and-observables)
+  - [Usage](#using-events-and-observables)
+- [Using Queues](#queues)
 - [License](#license)
 
 
@@ -313,6 +316,80 @@ Failure in Cell 'process_payment':
 stack traceback:
     process_payment.lua:5: in function 'process_payment'
     ...
+```
+
+## Events and Observables
+Workflower provides a powerful event system through observables. Observables allow you to register event listeners and dispatch events to those listeners. This can be particularly useful for managing asynchronous operations or reacting to changes in your application state.
+
+### Using Events and Observables
+You can create an observable and register event listeners for specific events. When an event is dispatched, all registered listeners for that event will be called with the provided arguments.
+
+```lua
+local wf = require("workflower")
+
+-- Create an observable
+local myObservable = wf.observable()
+
+-- Register an event listener
+myObservable:on("myEvent", function(data)
+    print("myEvent triggered with data:", data)
+end)
+
+-- Dispatch the event
+myObservable:dispatch("myEvent", "Hello, World!")
+```
+
+## Queues
+Queues, like Buckets, iare used to collect output at some point in a flow. This happens in a first-in-first-out (FIFO) manner. They are also observable, meaning you can listen for events when items are pushed to the queue. 
+
+Both Buckets and Queues come with a `"value"` event that gets dispatched when their values are updated. In the case of a `Bucket` it's when a new value is **set**, and in the case of a `Queue` it's when a new value is **pushed.**
+
+### Creating and Using Queues
+You can create a queue and register event listeners for when new values are pushed to the queue.
+
+```lua
+local wf = require("workflower")
+
+-- Create a queue
+local myQueue, cell_fn = wf.queue(nil) -- not in a workflow, so nil is passed since we have no next cell
+
+-- Register an event listener for the "value" event
+myQueue:on("value", function(...)
+    print("New value pushed to the queue:", ...)
+end)
+
+-- Push values to the queue
+cell_fn(1, 2, 3)
+cell_fn("a", "b", "c")
+```
+
+### Iterating and Consuming Items in a Queue
+You can iterate over the items in a queue using the iterator function, or you can consume (pop) each item using the consume function.
+
+
+```lua
+-- Iterate over the queue without removing items
+for i, j, k in myQueue:iterator() do
+    print("Queue item:", i, j, k)
+end
+print(myQueue)
+
+--> Queue item: 1 2 3
+--> Queue item: a b c
+--> Queue {
+--      ( 1, 2, 3 )
+--      ( a, b, c )
+-- }
+
+-- Consume items from the queue
+for i, j in myQueue:consume() do
+    print("Consumed queue item:", i, j)
+end
+print(myQueue)
+
+--> Queue item: 1 2
+--> Queue item: a b
+--> Queue {}
 ```
 
 
