@@ -119,7 +119,7 @@ local Queue = {}
 --- Creates a new Queue instance.
 --- A Queue is a data structure that holds multiple items in a first-in-first-out (FIFO) manner.
 --- It can be used in a Workflower chain to collect a series of outputs without disrupting the flow.
----@param _next string The next cell identifier.
+---@param _next string? The identifier for the next cell. Can be **nil** to default to the original flow order.
 ---@return Queue, function The new Queue instance and its corresponding cell function.
 function Queue.new(_next) end
 
@@ -144,6 +144,25 @@ function Queue.pop(self) end
 ---@param item any The item to push onto the Queue.
 function Queue.push(self, item) end
 
+--- Gets the first item from the Queue without removing it.
+---@param self Queue
+---@return any The first item in the Queue.
+function Queue.peek(self) end
+
+--- Checks if the Queue is empty.
+---@param self Queue
+---@return boolean True if the Queue is empty, otherwise false.
+function Queue.empty(self) end
+
+--- Returns an iterator function to iterate over the Queue items.
+---@param self Queue
+---@return function The iterator function.
+function Queue.iterator(self) end
+
+--- Returns an iterator function that pops each item from the Queue as it iterates.
+---@param self Queue
+---@return function The destructive iterator function.
+function Queue.consume(self) end
 
 --- Pipe class.
 ---@class Pipe
@@ -162,12 +181,12 @@ function pipe.new(_next, fn) end
 function workflower.pipe(_next, fn) end
 
 --- Creates a new Bucket instance for storing the output at any point in the workflow.
----@param _next string The next cell identifier.
+---@param _next string? The next cell identifier. Can be **nil** to default to the original order
 ---@return Bucket, function The new Bucket instance and its corresponding cell function.
 function workflower.bucket(_next) end
 
 --- Creates a new Queue instance for collecting multiple outputs in a FIFO manner.
----@param _next string The next cell identifier.
+---@param _next string? The next cell identifier. Can be **nil** to default to the original order
 ---@return Queue, function The new Queue instance and its corresponding cell function.
 function workflower.queue(_next) end
 
