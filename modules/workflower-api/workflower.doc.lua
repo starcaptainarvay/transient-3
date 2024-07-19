@@ -198,6 +198,96 @@ function workflower.observable() end
 ---@class Debugger
 local debugger = {}
 
+--- Formatting table constants for prettier debug strings
+local FMT_TABLE = {
+    --- Reset formatting
+    reset = 'reset',
+
+    --- Bold formatting
+    bold = 'bold',
+
+    --- Dim formatting
+    dim = 'dim',
+
+    --- Italic formatting
+    italic = 'italic',
+
+    --- Underline formatting
+    underline = 'underline',
+
+    --- Blink formatting
+    blink = 'blink',
+
+    --- Reverse formatting
+    reverse = 'reverse',
+
+    --- Hidden formatting
+    hidden = 'hidden',
+
+    --- Strikethrough formatting
+    strikethrough = 'strikethrough',
+
+    --- Foreground black
+    fg_black = 'fg_black',
+
+    --- Foreground red
+    fg_red = 'fg_red',
+
+    --- Foreground bright red
+    fg_bright_red = 'fg_bright_red',
+
+    --- Foreground orange
+    fg_orange = 'fg_orange',
+
+    --- Foreground green
+    fg_green = 'fg_green',
+
+    --- Foreground yellow
+    fg_yellow = 'fg_yellow',
+
+    --- Foreground blue
+    fg_blue = 'fg_blue',
+
+    --- Foreground magenta
+    fg_magenta = 'fg_magenta',
+
+    --- Foreground cyan
+    fg_cyan = 'fg_cyan',
+
+    --- Foreground white
+    fg_white = 'fg_white',
+
+    --- Background black
+    bg_black = 'bg_black',
+
+    --- Background red
+    bg_red = 'bg_red',
+
+    --- Background bright red
+    bg_bright_red = 'bg_bright_red',
+
+    --- Background orange
+    bg_orange = 'bg_orange',
+
+    --- Background green
+    bg_green = 'bg_green',
+
+    --- Background yellow
+    bg_yellow = 'bg_yellow',
+
+    --- Background blue
+    bg_blue = 'bg_blue',
+
+    --- Background magenta
+    bg_magenta = 'bg_magenta',
+
+    --- Background cyan
+    bg_cyan = 'bg_cyan',
+
+    --- Background white
+    bg_white = 'bg_white'
+}
+
 --- Logs an error and formats the traceback.
 ---@param id string The identifier of the cell where the error occurred.
 ---@param flower Workflower The workflower instance.
@@ -227,7 +317,6 @@ return ---@type fun(options: WorkflowerOptions, ...: any): Workflower
     --- Creates a new Workflower instance.
     new = workflower.new,
 
-
     --- Wraps a regular function into a Workflower cell function.
     --- This utility function can be used to adapt regular functions into the Workflower cell format.
     cellify = workflower.cellify,
@@ -256,94 +345,7 @@ return ---@type fun(options: WorkflowerOptions, ...: any): Workflower
     --- Debugging constants and configurations
     debugging = {
         --- Formatting table
-        formatting = {
-            --- Reset formatting
-            reset = 'reset',
-
-            --- Bold formatting
-            bold = 'bold',
-
-            --- Dim formatting
-            dim = 'dim',
-
-            --- Italic formatting
-            italic = 'italic',
-
-            --- Underline formatting
-            underline = 'underline',
-
-            --- Blink formatting
-            blink = 'blink',
-
-            --- Reverse formatting
-            reverse = 'reverse',
-
-            --- Hidden formatting
-            hidden = 'hidden',
-
-            --- Strikethrough formatting
-            strikethrough = 'strikethrough',
-
-            --- Foreground black
-            fg_black = 'fg_black',
-
-            --- Foreground red
-            fg_red = 'fg_red',
-
-            --- Foreground bright red
-            fg_bright_red = 'fg_bright_red',
-
-            --- Foreground orange
-            fg_orange = 'fg_orange',
-
-            --- Foreground green
-            fg_green = 'fg_green',
-
-            --- Foreground yellow
-            fg_yellow = 'fg_yellow',
-
-            --- Foreground blue
-            fg_blue = 'fg_blue',
-
-            --- Foreground magenta
-            fg_magenta = 'fg_magenta',
-
-            --- Foreground cyan
-            fg_cyan = 'fg_cyan',
-
-            --- Foreground white
-            fg_white = 'fg_white',
-
-            --- Background black
-            bg_black = 'bg_black',
-
-            --- Background red
-            bg_red = 'bg_red',
-
-            --- Background bright red
-            bg_bright_red = 'bg_bright_red',
-
-            --- Background orange
-            bg_orange = 'bg_orange',
-
-            --- Background green
-            bg_green = 'bg_green',
-
-            --- Background yellow
-            bg_yellow = 'bg_yellow',
-
-            --- Background blue
-            bg_blue = 'bg_blue',
-
-            --- Background magenta
-            bg_magenta = 'bg_magenta',
-
-            --- Background cyan
-            bg_cyan = 'bg_cyan',
-
-            --- Background white
-            bg_white = 'bg_white'
-        },
+        formatting = FMT_TABLE,
 
         --- Formats a string with the given formatting options.
         ---@param str string The string to format.
