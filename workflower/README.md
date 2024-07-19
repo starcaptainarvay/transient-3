@@ -4,12 +4,12 @@ The `workflower` library is designed to create and manage a directed graph of co
 
 ## Table of Contents
 
+- [Installation](#installation)
 - [Key Concepts and Components](#key-concepts-and-components)
-  - [WorkflowerOptions](#workfloweroptions)
+  - [Workflower Construction](#workflower-construction)
   - [Workflower Class](#workflower-class)
   - [Cells](#cells)
   - [Bucket Class](#bucket-class)
-- [Installation](#installation)
 - [Usage](#usage)
   - [Creating a New Workflower Instance](#creating-a-new-workflower-instance)
   - [Adding and Retrieving Cells](#adding-and-retrieving-cells)
@@ -24,12 +24,17 @@ The `workflower` library is designed to create and manage a directed graph of co
 - [Using Queues](#queues)
 - [License](#license)
 
+## Installation
+
+Include the `workflower` library in your project by copying the files into your project directory.
 
 ## Key Concepts and Components
 
-### WorkflowerOptions
+### Workflower Construction
 ```lua
-{
+local workflower = require("workflower")
+
+local workflowerOptions = {
     'entry', -- first cell that gets called
     {'entry', 'node2', 'node3', ...} --[[ 
         order of cells to call, although this can change dynamically based on the 
@@ -40,6 +45,8 @@ The `workflower` library is designed to create and manage a directed graph of co
     node2 = node2_function: function,
     ...
 }
+
+local workflow = workflower(workflowerOptions) -- pass the options into the workflower constructor
 ```
 Defines the structure of the options table that initializes the workflower. It includes an entry point and a graph structure that specifies the order and possible branches of cells.
 
@@ -47,17 +54,30 @@ Defines the structure of the options table that initializes the workflower. It i
 The main class that represents the directed graph of computational cells. It includes methods to create a new instance, add cells, retrieve cells, and execute the workflow.
 
 ### Cells
-Individual computational steps within the workflower. Each cell has an identifier and a function that performs the computation and can return the next cell to execute.
+Individual computational steps within the workflower. Each cell has an identifier and a function that performs the computation and can return the next cell to execute, as well as the return values of the function itself.
+
+```lua
+local function example_cell(arg1, arg2, arg3)
+    local result2 = arg2
+    local result3 = arg3
+    
+    if arg1 > 3 then
+        local result1 = "greater than 3"
+        return 'example_cell_4', result1, result2, result3 
+        -- the next cell, "example_cell_4" is passed result1, result2, and result3
+    end
+
+    local result1 = "less than 3"
+    return 'example_cell_2', result1, result2
+    -- the next cell, "example_cell_2" is passed result1 and result2
+end
+```
 
 ### Bucket Class
 A simple state wrapper that can store and retrieve values during the workflow execution. It can be used to capture intermediate results without disrupting the flow.
 
-### Pipe Class
-Represents a function that processes data and passes it to the next cell in the workflow.
-
-## Installation
-
-Include the `workflower` library in your project by copying the files into your project directory.
+### Pipes
+`workflower.pipe(fn: function)` returns a cell that wraps the function `fn`, and calls `fn` on the side with whatever passes through the cell. 
 
 ## Usage
 
@@ -104,8 +124,9 @@ end
 The workflower can be executed as a function. Starting from the entry point, each cell’s function is executed, and based on its return value, the next cell in the graph is determined and executed.
 
 ```lua
-wf()
+wf(...) -- Basically returns the result of finish(nil, process(nil, start(...)))
 ```
+This is a pretty bare-bones case that only really demonstrates how Workflower can run a state machine in order, but the utility of the library comes from using a combination of the tools it offers.
 
 Let's create a practical example of a simple workflow that models a real-world problem. Suppose we want to model a basic customer order processing system. 
 The workflow will include steps such as receiving an order, processing payment, checking inventory, and shipping the order.
