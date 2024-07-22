@@ -1,5 +1,4 @@
 ---@meta
-
 ---@module 'love.filesystem'
 
 --- Provides an interface to the user's filesystem.

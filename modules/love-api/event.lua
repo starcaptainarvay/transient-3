@@ -1,5 +1,4 @@
 ---@meta
-
 ---@module 'love.event'
 
 --- Manages events, like keypresses.

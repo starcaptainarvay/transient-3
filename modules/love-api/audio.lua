@@ -1,5 +1,4 @@
 ---@meta
-
 ---@module 'love.audio'
 
 ---@alias DistanceModel string

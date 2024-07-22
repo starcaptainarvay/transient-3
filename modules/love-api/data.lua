@@ -1,5 +1,4 @@
 ---@meta
-
 ---@module 'love.data'
 
 --- Provides functionality for creating and transforming data.
