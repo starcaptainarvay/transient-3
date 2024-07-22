@@ -3,7 +3,7 @@ local t3 = require("transient")
 local socket = require("socket")
 
 local renderQueue, renderQueueCell = wf.queue()
-local drawTexture = wf()
+local drawTexture = wf({})
 
 function love.load()
     -- TODO set up transient and workflows

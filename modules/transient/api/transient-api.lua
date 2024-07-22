@@ -38,19 +38,27 @@ function System:listEntities() end
 function System:updateEntities() end
 
 --- Initializes a component in the system.
+-- @abstract
+-- This method should be overridden in implementation.
 ---@param componentData table The component data to initialize.
 ---@param entity Entity The entity associated with the component.
 function System:init(componentData, entity) end
 
 --- Updates a component in the system.
+-- @abstract
+-- This method should be overridden in implementation.
 ---@param componentData table The component data to update.
 ---@param entity Entity The entity associated with the component.
 function System:update(componentData, entity) end
 
 --- Initializes the system.
+-- @abstract
+-- This method should be overridden in implementation.
 function System:initSystem() end
 
 --- Updates the system.
+-- @abstract
+-- This method should be overridden in implementation.
 function System:updateSystem() end
 
 --- Converts the system to a string representation.
