@@ -18,8 +18,10 @@ love.sound = require("love-api.sound")
 love.system = require("love-api.system")
 love.thread = require("love-api.thread")
 love.timer = require("love-api.timer")
--- love.touch = require("love-api.touch")
--- love.video = require("love-api.video")
--- love.window = require("love-api.window")
+love.touch = require("love-api.touch")
+love.video = require("love-api.video")
+love.window = require("love-api.window")
+
+require("love-api.luasocket") -- initialize LuaSocket api bindings
 
 return love
