@@ -1,4 +1,4 @@
-package.path = package.path .. ";./workflower/?.lua;./transient/?.lua"
+package.path = package.path .. ";./modules/workflower/?.lua;./modules/transient/?.lua"
 function love.conf(e)
 	e.console = true
 end

@@ -1,9 +1,9 @@
 {
     "Lua.runtime.version": "LuaJIT",
     "Lua.workspace.library": [
-        "${workspaceFolder}/workflower/api",
-        "${workspaceFolder}/transient/api",
-        "${workspaceFolder}/love/love-api",
+        "${workspaceFolder}/modules/workflower/api",
+        "${workspaceFolder}/modules/transient/api",
+        "${workspaceFolder}/modules/love/api",
     ],
     "Lua.workspace.checkThirdParty": true,
     "Lua.diagnostics.globals": [
