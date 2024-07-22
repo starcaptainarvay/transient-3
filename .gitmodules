@@ -2,3 +2,7 @@
 	path = workflower
 	url = https://github.com/starcaptainarvay/workflower.git
 	branch = lib
+[submodule "modules/workflower"]
+	path = modules/workflower
+	url = https://github.com/starcaptainarvay/workflower.git
+	branch = lib
