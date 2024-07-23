@@ -181,11 +181,27 @@ function love.graphics.newQuad(x, y, width, height, sw, sh) end
 ---@return love.graphics.Shader shader The new Shader.
 function love.graphics.newShader(code) end
 
+--- Sets or resets a Shader as the current pixel effect or vertex shaders. All drawing operations until the next love.graphics.setShader will be drawn using the Shader object specified.
+---@param shader love.graphics.Shader? The new shader.
+function love.graphics.setShader(shader) end
+
+--- Gets the current Shader. Returns nil if none is set.
+---@return love.graphics.Shader? shader The currently active Shader, or nil if none is set.
+function love.graphics.getShader() end
+
 --- Creates a new Text.
 ---@param font love.graphics.Font The Font object to use.
 ---@param text string The initial text.
 ---@return love.graphics.Text text The new Text.
 function love.graphics.newText(font, text) end
+
+--- Gets the width in pixels of the window.
+---@return number width
+function love.graphics.getWidth() end
+
+--- Gets the height in pixels of the window.
+---@return number height
+function love.graphics.getHeight() end
 
 ---@class love.graphics.Canvas
 local Canvas = {}
