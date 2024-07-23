@@ -18,10 +18,11 @@ function love.load()
 
     gradient = love.graphics.newShader("shaders/gradient.glsl")
 
-    gradient:send("center", {0.5, 0.5})                                                   -- Center of the gradient (normalized coordinates)
-    gradient:send("resolution", {love.graphics.getWidth(), love.graphics.getHeight()})    -- Screen resolution
-    gradient:send("color2", {1.0, 0, 0.0})                                              -- Color at the center (red)
-    gradient:send("color1", {0.0, 1.0, 0.0})                                              -- Color at the edges (blue)
+    gradient:send("center", {2, 2})
+    -- gradient:send("strength", 2)                                                     -- Center of the gradient (normalized coordinates)
+    -- gradient:send("resolution", { love.graphics.getWidth(), love.graphics.getHeight() })    -- Screen resolution
+    gradient:send("color2", {0.0, 0, 0.0})                                                  -- Color at the center (red)
+    gradient:send("color1", {1.0, 0.0, 0.0})                                                -- Color at the edges (blue)
 end
 
 function love.update()
@@ -34,9 +35,13 @@ function love.draw()
     local x_offset = 75/love.graphics.getWidth()
     local y_offset = 75/love.graphics.getHeight()
 
-    gradient:send("center", {x_offset, y_offset})
+    -- print(x_offset, y_offset)
 
-    love.graphics.rectangle("fill", 40, 40, 70, 70)
+    gradient:send("center", {75, 75})
+    gradient:send("size", {70, 70})
+
+    love.graphics.circle("fill", 75, 75, 35)
+    -- love.graphics.rectangle("fill", 40, 40, 70, 70)
 
     love.graphics.setShader()
 
