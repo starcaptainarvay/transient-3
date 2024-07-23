@@ -72,7 +72,7 @@ end
 local entitiesUpdatedQueue, triggerEntitiesUpdatedEvent = wf.queue(nil)
 
 local update_single_system = wf({
-    "update-entities",
+    "queue-update",
     {"queue-update", "dispatch-entities-updated"},
     ["queue-update"] = function(system)
         system:updateEntities()
