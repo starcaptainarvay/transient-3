@@ -4,9 +4,13 @@
         "${workspaceFolder}/modules/workflower/api",
         "${workspaceFolder}/modules/transient/api",
         "${workspaceFolder}/modules/love/api",
+        "${3rd}/love2d/library"
     ],
     "Lua.workspace.checkThirdParty": true,
     "Lua.diagnostics.globals": [
         "love"
-    ]
+    ],
+    "Lua.runtime.special": {
+        "love.filesystem.load": "loadfile"
+    }
 }
