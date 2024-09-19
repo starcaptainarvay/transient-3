@@ -1,4 +1,5 @@
 local Vector = {}
+Vector.__index = Vector
 
 local VECTOR_TYPE_SYMBOL = 'Transient.Vector'
 
@@ -8,6 +9,26 @@ function Vector.new(x, y)
         x = x,
         y = y
     }, Vector)
+end
+
+function Vector:floor()
+    return Vector.new(math.floor(self.x), math.floor(self.y))
+end
+
+local function clamp(n, a, b)
+    return math.max(a, math.min(n, b))
+end
+
+function Vector:clamp(min, max)
+    if type(min) == "number" then
+        return self:clamp(Vector.new(min, min), max)
+    elseif type(max) == "number" then
+        return self:clamp(min, Vector.new(max, max))
+    end
+    return Vector.new(
+        clamp(self.x, min.x, max.x),
+        clamp(self.y, min.y, max.y)
+    )
 end
 
 -- vector addition:
