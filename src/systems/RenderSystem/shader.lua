@@ -1,30 +1,17 @@
 local wf = require("workflower")
-local t3 = require("transient")
-
-local RenderSystem = t3.system("Render")
-
-local renderQueue, renderQueueCell = wf.queue()
-
-function RenderSystem:init(component, entity)
-    
-end
-
-function RenderSystem:update(component, entity)
-    
-end
-
-function RenderSystem:updateSystem()
-    
-end
 
 local shader_registry = {}
+local SHADER_DIR = "src/shader/"
 
 local function get_file(params)
+    local filename = SHADER_DIR .. params.name .. ".glsl"
     return 'read', params.name, filename, params
 end
 
 local function read_shader_file(shader_id, filename, params)
-    return 'compile', shader_id, love.filesystem.read(filename)
+    local file_content, io_err_or_size = love.filesystem.read(filename)
+    print("file_content", file_content, "file_size:", io_err_or_size)
+    return 'compile', shader_id, file_content
 end
 
 local function load_shader(shader_id, shader_code, params)
@@ -44,12 +31,20 @@ local function fetch_shader(shader_id, params)
     if not shader_registry[shader_id] then
         createShader(params)
     end
-    return nil, shader_registry[shader_id], params
+    return 'apply', shader_registry[shader_id], params
 end
 
-local function apply_shader(shader_code, ...)
-    love.graphics.setShader()
+local function apply_shader(shaderObject, ...)
+    love.graphics.setShader(shaderObject)
     return ...
 end
 
-return RenderSystem
+local applyShader = wf({
+    'fetch',
+    fetch = fetch_shader,
+    apply = apply_shader
+})
+
+return {
+    apply = applyShader
+}
