@@ -7,8 +7,17 @@ function Vector.new(x, y)
     return setmetatable({
         type = VECTOR_TYPE_SYMBOL,
         x = x,
-        y = y
+        y = y,
+        magnitude = math.sqrt(x^2 + y^2)
     }, Vector)
+end
+
+function Vector:unit()
+    return Vector.new(self.x/self.magnitude, self.y/self.magnitude)
+end
+
+function Vector:normal()
+    return self:unit()
 end
 
 function Vector:floor()

@@ -37,8 +37,19 @@ local renderQueue, renderQueueCell
                 if key == "up" or key == "down" then
                     k = -1
                 end
+
                 if love.keyboard.isDown("lshift") or love.keyboard.isDown("rshift") then
-                    dimensions = dimensions + (k * value * ADJUST_SCALE)
+                    local projected = dimensions + (k * value * ADJUST_SCALE)
+                    local MIN_DIMENSION_SIZE = 200
+
+                    if dimensions.x < MIN_DIMENSION_SIZE or
+                        dimensions.y < MIN_DIMENSION_SIZE then
+                        if projected.magnitude < dimensions.magnitude then
+                            return pressed_adjustment_key
+                        end
+                    end
+
+                    dimensions = projected
                     center = (dimensions/2):floor()
                 else
                     offset = offset + (k * value * ADJUST_SCALE)
@@ -88,6 +99,8 @@ function RenderSystem:updateSystem()
 
         renderQueueCell({ "rect", 10, { offset, dimensions } })
     end
+
+    center = (dimensions/2):floor() + offset
 end
 
 local function rect(line_width, dim)
@@ -101,6 +114,9 @@ function RenderSystem.drawTexture(object, ...)
     if object == "rect" then
         rect(...)
     end
+
+    love.graphics.setPointSize(10)
+    love.graphics.points(center.x, center.y)
 end
 
 function RenderSystem.createQueue()
