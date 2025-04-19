@@ -1,6 +1,6 @@
 local wf = require("workflower")
 local t3 = require("transient")
-local Shader = require("RenderSystem.shader")
+local Shader = require("systems.RenderSystem.shader")
 local Vector = require("src.math.Vector")
 
 local RenderSystem = t3.system("Render")
@@ -19,8 +19,8 @@ function RenderSystem:updateSystem()
     
 end
 
-function RenderSystem.drawTexture()
-
+function RenderSystem.drawTexture(object)
+    
 end
 
 function RenderSystem.createQueue()
