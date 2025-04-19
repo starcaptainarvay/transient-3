@@ -11,7 +11,7 @@ end
 local function read_shader_file(shader_id, filename, params)
     local file_content, io_err_or_size = love.filesystem.read(filename)
     print("file_content", file_content, "file_size:", io_err_or_size)
-    return 'compile', shader_id, file_content
+    return 'compile', shader_id, file_content, params
 end
 
 local function load_shader(shader_id, shader_code, params)
@@ -34,9 +34,14 @@ local function fetch_shader(shader_id, params)
     return 'apply', shader_registry[shader_id], params
 end
 
-local function apply_shader(shaderObject, ...)
+local function apply_shader(shaderObject, params)
     love.graphics.setShader(shaderObject)
-    return ...
+
+    for paramName, paramValue in pairs(params) do
+        shaderObject:send(paramName, paramValue)
+    end
+
+    return params
 end
 
 local applyShader = wf({
