@@ -75,6 +75,10 @@ local update_single_system = wf({
     "queue-update",
     {"queue-update", "dispatch-entities-updated"},
     ["queue-update"] = function(system)
+        if system.preUpdate then
+           system:preUpdate()
+        end
+
         system:updateEntities()
         return nil, system.name, system:listEntities()
     end,
