@@ -97,7 +97,14 @@ function RenderSystem:updateSystem()
             print(dimensions, center + offset)
         end
 
-        renderQueueCell({ "rect", 10, { offset, dimensions } })
+        renderQueueCell({ {
+            shaders = {
+                test = {
+                    name = "test",
+                    tick = os.time() % 10
+                }
+            }
+        }, "rect", 10, { offset, dimensions } })
     end
 
     center = (dimensions/2):floor() + offset
@@ -110,7 +117,15 @@ local function rect(line_width, dim)
     love.graphics.rectangle("line", pos.x, pos.y, size.x, size.y)
 end
 
-function RenderSystem.drawTexture(object, ...)
+function RenderSystem.drawTexture(settings, object, ...)
+    settings = settings or {}
+
+    if settings.shaders then
+        for shaderId, params in pairs(settings.shaders) do
+            Shader.apply(shaderId, params)
+        end
+    end
+
     if object == "rect" then
         rect(...)
     end
