@@ -41,6 +41,7 @@ end
 
 local applyShader = wf({
     'fetch',
+    {'fetch', 'apply'},
     fetch = fetch_shader,
     apply = apply_shader
 })
