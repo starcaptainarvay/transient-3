@@ -7,7 +7,8 @@ function Vector.new(x, y)
     return setmetatable({
         type = VECTOR_TYPE_SYMBOL,
         x = x,
-        y = y
+        y = y,
+        magnitude = math.sqrt(x^2 + y^2)
     }, Vector)
 end
 
