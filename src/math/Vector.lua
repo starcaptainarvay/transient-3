@@ -12,6 +12,14 @@ function Vector.new(x, y)
     }, Vector)
 end
 
+function Vector:unit()
+    return Vector.new(self.x/self.magnitude, self.y/self.magnitude)
+end
+
+function Vector:normal()
+    return self:unit()
+end
+
 function Vector:floor()
     return Vector.new(math.floor(self.x), math.floor(self.y))
 end
