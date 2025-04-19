@@ -6,7 +6,7 @@ float  f_peaks[8]; // top 8 frequencies peaks in descending order
 
 
 void  setup() {
-Serial.begin(250000);
+Serial.begin(115200);
 }
 
 
@@ -36,7 +36,7 @@ void  Chord_det()
   a1=micros();
         for(int i=0;i<128;i++)
           {
-            a=analogRead(A7)-500;     //rough zero shift
+            a=analogRead(A0)-500;     //rough zero shift
             //utilising  time between two sample for windowing & amplitude calculation
             sum1=sum1+a;              //to average value
             sum2=sum2+a*a;            // to  RMS value
