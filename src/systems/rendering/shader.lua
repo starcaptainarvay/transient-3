@@ -38,7 +38,9 @@ local function apply_shader(shaderObject, params)
     love.graphics.setShader(shaderObject)
 
     for paramName, paramValue in pairs(params) do
-        shaderObject:send(paramName, paramValue)
+        if paramName ~= "name" then
+            shaderObject:send(paramName, paramValue)
+        end
     end
 
     return params
