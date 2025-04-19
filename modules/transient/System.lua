@@ -39,6 +39,7 @@ function System:update(componentData, entity) end
 
 function System:destroy(componentData, entity) end
 function System:initSystem() end
+function System:preUpdate() end
 function System:updateSystem() end
 
 function System.__tostring(self)
