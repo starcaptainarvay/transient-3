@@ -1,6 +1,8 @@
 local wf = require("workflower")
 local t3 = require("transient")
 
+local Renderables = require("src.renderables")
+
 local Shader = require("systems.rendering.shader")
 print("shader loaded")
 
@@ -110,13 +112,6 @@ function RenderSystem:updateSystem()
     center = (dimensions/2):floor() + offset
 end
 
-local function rect(line_width, dim)
-    local pos, size = unpack(dim)
-
-    love.graphics.setLineWidth(line_width)
-    love.graphics.rectangle("line", pos.x, pos.y, size.x, size.y)
-end
-
 function RenderSystem.drawTexture(settings, object, ...)
     settings = settings or {}
 
@@ -126,8 +121,8 @@ function RenderSystem.drawTexture(settings, object, ...)
         end
     end
 
-    if object == "rect" then
-        rect(...)
+    if Renderables[object] then
+        Renderables[object](...)
     end
 
     love.graphics.setPointSize(10)
