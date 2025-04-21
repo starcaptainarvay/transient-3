@@ -82,7 +82,7 @@ function RenderSystem:initSystem()
 end
 
 function RenderSystem:update(component, entity)
-    print('updawg')
+    
 end
 
 function RenderSystem:preUpdate()
@@ -96,7 +96,6 @@ function RenderSystem:updateSystem()
     if AdjustingOn:get() then
         if IsAdjusting() then
             love.graphics.setColor(1, .7, .2, 1)
-            print(dimensions, center + offset)
         end
 
         renderQueueCell({ {

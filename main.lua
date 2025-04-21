@@ -10,6 +10,21 @@ function love.load()
     -- TODO set up transient and workflows
     love.window.setFullscreen(true)
     t3.start()
+
+    inputSystem:on("down", function(key, scanCode, isRepeat)
+        if key ~= "q" then return end
+        local quitting = true
+
+        inputSystem:once("down", function(key)
+            if key == "escape" then quitting = false end
+        end)
+
+        inputSystem:once("up", function(key)
+            if key == "q" and quitting then
+                love.event.quit()
+            end
+        end)
+    end)
 end
 
 
