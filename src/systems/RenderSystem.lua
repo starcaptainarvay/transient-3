@@ -65,7 +65,7 @@ local renderQueue, renderQueueCell
 --[[ END ]]
 
 function RenderSystem:init(component, entity)
-
+    component.created = love.timer.getTime()
 end
 
 function RenderSystem:initSystem()
@@ -82,7 +82,9 @@ function RenderSystem:initSystem()
 end
 
 function RenderSystem:update(component, entity)
-    
+    local currentTime = love.timer.getTime()
+    component.delta = currentTime - component.now
+    component.now = currentTime
 end
 
 function RenderSystem:preUpdate()
