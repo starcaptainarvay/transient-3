@@ -5,6 +5,7 @@ local vector = require("src.math.vector")
 
 local inputSystem = require("systems.InputSystem")
 local renderQueue, renderQueueCell, drawTexture = require("systems.RenderSystem").createQueue()
+local serialSystem = require("systems.SerialSystem")
 
 function love.load()
     -- TODO set up transient and workflows
@@ -33,6 +34,10 @@ function love.update()
     -- print('drawing rect:')
     -- print('drew')
     t3.update() -- Update state of Transient 3 ECS
+
+    for object in serialSystem.FIFO:consume() do
+        io.write(object)
+    end
 end
 
 function love.draw()
