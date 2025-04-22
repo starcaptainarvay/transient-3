@@ -8,6 +8,7 @@ local COMMAND = string.format('plink -serial %s -sercfg %d,8,n,1 -batch', PORT, 
 
 local serial, serialPush
 
+
 function SerialSystem:initSystem()
     serial = io.popen(COMMAND, "r")
 
@@ -17,6 +18,8 @@ function SerialSystem:initSystem()
 
     SerialSystem.FIFO, serialPush = wf.queue()
 end
+
+SerialSystem.Events = wf.observable()
 
 function SerialSystem:updateSystem()
     local char
