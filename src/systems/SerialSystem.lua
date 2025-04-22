@@ -24,7 +24,7 @@ function SerialSystem:updateSystem()
     for i=1, 256 do
         char = serial:read(1)
         if char then
-            serialPush:push(char)
+            serialPush(char)
         else break end
     end
 end
