@@ -53,4 +53,18 @@ function dict.values(tab)
     return output
 end
 
+function dict.reduce(tab, f)
+    local output = {}
+
+    for k, v in pairs(tab) do
+        if output[k] == nil then
+            output[k] = v
+        else
+            output[k] = f(output[k], v)
+        end
+    end
+
+    return output
+end
+
 return dict
