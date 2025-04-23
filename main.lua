@@ -7,6 +7,8 @@ local inputSystem = require("systems.InputSystem")
 local renderQueue, renderQueueCell, drawTexture = require("systems.RenderSystem").createQueue()
 local serialSystem = require("systems.SerialSystem")
 
+local PeakSystem = require("systems.PeakSystem")
+
 function love.load()
     -- TODO set up transient and workflows
     love.window.setFullscreen(true)
@@ -35,9 +37,9 @@ function love.update()
     -- print('drew')
     t3.update() -- Update state of Transient 3 ECS
 
-    for object in serialSystem.FIFO:consume() do
-        io.write(object)
-    end
+    -- for object in serialSystem.FIFO:consume() do
+    --     io.write(object)
+    -- end
 end
 
 function love.draw()

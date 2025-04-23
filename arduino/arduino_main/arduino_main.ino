@@ -16,7 +16,7 @@ void setup() {
 }
 
 void loop() {
-    Chord_det();
+    detect_peaks();
 }
 
 //----------------------------- Chord Detection Function ----------------------------------------------//
@@ -26,7 +26,7 @@ void loop() {
 // This code is written for Arduino Nano (should also work for UNO or better boards).
 // It requires at least 2KB of RAM. For more accurate detection, increase the sample size on more powerful boards.
 
-void Chord_det() {
+void detect_peaks() {
     unsigned long start_time, end_time;
     float sample, sum_avg = 0, sum_rms = 0, sampling_rate;
 
@@ -57,11 +57,18 @@ void Chord_det() {
             in[i] = 0;
         }
 
-        Serial.println("FFT performed, outputs:");
+        // Serial.println("FFT performed, outputs:");
+        Serial.print('b');
         for (int i = 0; i < MAX_PEAKS; i++) {
-            Serial.print("\tf_peak_freqs[" + String(i) + "] = " + String(f_peak_freqs[i]));
-            Serial.println("\tf_peak_amps[" + String(i) + "] = " + String(f_peak_amps[i]));
+            // Serial.print("\tf_peak_freqs[" + String(i) + "] = " + String(f_peak_freqs[i]));
+            // Serial.println("\tf_peak_amps[" + String(i) + "] = " + String(f_peak_amps[i]));
+            Serial.print(String(f_peak_freqs[i]));
+            Serial.print('f');
+            Serial.print(String(f_peak_amps[i]));
+            Serial.print('a');
         }
+        Serial.print('e');
+        Serial.flush(); // Ensure all data is sent before next iteration
     }
 }
 

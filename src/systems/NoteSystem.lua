@@ -2,7 +2,7 @@ local t3 = require("transient")
 local wf = require("workflower")
 
 local NoteSystem = t3.system("Note")
-local SerialSystem = t3.system("Serial")
+local PeakSystem = t3.system("systems.PeakSystem")
 
 -- Define the range of MIDI notes (e.g., 21 to 108 for a full piano keyboard)
 local MIDI_START = 21
@@ -45,21 +45,22 @@ function NoteSystem:initSystem()
         MIDI_NOTE_QUEUES[note] = queueIncomingEvent
     end
 
-    SerialSystem.Events:on("data", function(frequency, amplitude)
+    PeakSystem.Events:on("data", function(frequency, amplitude, amplitude_avg, count)
         local pitch = NoteSystem:snapFrequencyToGrid(frequency)
 
         local queueIncomingEvent = MIDI_NOTE_QUEUES[pitch]
         if queueIncomingEvent then
-            queueIncomingEvent({ frequency = frequency, amplitude = amplitude })
+            queueIncomingEvent({ frequency = frequency, amplitude = amplitude, amplitude_avg = amplitude_avg, count = count })
         end
     end)
 end
 
 function NoteSystem:update(component, entity)
     for event in component.incomingEvents:consume() do
-        local pitch, amplitude = event.frequency, event.amplitude
+        local pitch, amplitude, amplitude_avg, count = event.frequency, event.amplitude, event.amplitude_avg, event.count
 
         -- TODO handle event
+        
     end
 end
 
