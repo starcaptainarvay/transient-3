@@ -66,6 +66,7 @@ local renderQueue, renderQueueCell
 
 function RenderSystem:init(component, entity)
     component.created = love.timer.getTime()
+    component.now = component.created
 end
 
 function RenderSystem:initSystem()
@@ -85,6 +86,12 @@ function RenderSystem:update(component, entity)
     local currentTime = love.timer.getTime()
     component.delta = currentTime - component.now
     component.now = currentTime
+
+    if component.expiry then
+        if component.now - component.created > component.expiry then
+            t3.removeComponent(entity, component)
+        end
+    end
 end
 
 function RenderSystem:preUpdate()
