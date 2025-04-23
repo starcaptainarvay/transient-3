@@ -43,6 +43,8 @@ function love.update()
 end
 
 function love.draw()
+    love.graphics.clear(0, 0, 0, 1)
+
     for renderedObject in renderQueue:consume() do
         drawTexture(unpack(renderedObject))
     end
