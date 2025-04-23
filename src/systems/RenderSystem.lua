@@ -67,6 +67,11 @@ local renderQueue, renderQueueCell
 function RenderSystem:init(component, entity)
     component.created = love.timer.getTime()
     component.now = component.created
+    component.argv = component.argv or {}
+
+    if not component.renderable then
+        error("RenderSystem: No renderable provided")
+    end
 end
 
 function RenderSystem:initSystem()
@@ -80,12 +85,79 @@ function RenderSystem:initSystem()
         if key ~= KEY_ADJUST_MODE then return end
         AdjustingOn:set(not AdjustingOn:get())
     end)
+
+    local RenderSystemLocalEntity = t3.entity()
+
+    RenderSystem.DebugBoundingRect = {
+        renderable = "rect",
+        size = dimensions,
+        position = vector.new(0, 0),
+        -- shaders = { "test" },
+        argv = { 10 } -- linewidth
+    }
+
+    RenderSystem.DebugCenterDot = {
+        renderable = "point",
+        size = vector.new(3, 3),
+        position = vector.new(0, 0),
+        shaders = { "test" },
+        argv = { 10 } -- linewidth
+    }
+
+    t3.addComponent(RenderSystemLocalEntity, "Render", RenderSystem.DebugBoundingRect)
+    t3.addComponent(RenderSystemLocalEntity, "Render", RenderSystem.DebugCenterDot)
+
+    setAdjustingOn(false)
 end
 
 function RenderSystem:update(component, entity)
+    if component.Enabled == false then return end
+
     local currentTime = love.timer.getTime()
     component.delta = currentTime - component.now
     component.now = currentTime
+
+    local renderObject = {}
+
+    if component.size then
+        renderObject.size = component.size
+
+        if component.position then
+            -- Adjust position to center the anchor point
+            renderObject.position = component.position - (component.size / 2)
+        end
+    elseif component.position then
+        renderObject.position = component.position
+    end
+
+    if component.shaders then
+        renderObject.shaders = {}
+
+        for _, shaderName in pairs(component.shaders) do
+            renderObject.shaders[shaderName] = {
+                name = shaderName,
+                tick = component.now - component.created,
+                delta = component.delta,
+                intensity = component.intensity, -- default 1
+                force = component.force -- default 0
+            }
+        end
+    end
+
+    -- Convert position to absolute coordinates before queuing
+    if renderObject.position then
+        renderObject.position = renderObject.position + center + offset
+    end
+
+    renderQueueCell({
+        renderObject,
+        component.renderable,
+
+        -- Renderable args:
+            renderObject.size,
+            renderObject.position,
+            unpack(component.argv)
+    })
 
     if component.expiry then
         if component.now - component.created > component.expiry then
@@ -100,27 +172,38 @@ function RenderSystem:preUpdate()
 end
 
 function RenderSystem:updateSystem()
-    love.graphics.setColor(0, 1, 0, 1)
+    RenderSystem.DebugBoundingRect.Enabled = AdjustingOn:get()
+    RenderSystem.DebugCenterDot.Enabled = AdjustingOn:get()
 
     if AdjustingOn:get() then
+        RenderSystem.DebugBoundingRect.argv[2] = {0, 1, 0, 1}
+
         if IsAdjusting() then
-            love.graphics.setColor(1, .7, .2, 1)
+            RenderSystem.DebugBoundingRect.argv[2] = {1, .7, .2, 1}
         end
 
-        renderQueueCell({ {
-            shaders = {
-                test = {
-                    name = "test",
-                    tick = os.time() % 10
-                }
-            }
-        }, "rect", 10, { offset, dimensions } })
+        -- print(dimensions, offset, center)
+
+        RenderSystem.DebugBoundingRect.size = dimensions
+
+        -- renderQueueCell({ {
+        --     position = vector.new(),
+        --     size = dimensions
+        --     -- shaders = {
+        --     --     test = {
+        --     --         name = "test",
+        --     --         tick = os.time() % 10
+        --     --     }
+        --     -- }
+        -- }, "rect", 10})
     end
 
     center = (dimensions/2):floor() + offset
 end
 
 function RenderSystem.drawTexture(settings, object, ...)
+    love.graphics.setShader()
+
     settings = settings or {}
 
     if settings.shaders then
@@ -133,8 +216,8 @@ function RenderSystem.drawTexture(settings, object, ...)
         Renderables[object](...)
     end
 
-    love.graphics.setPointSize(10)
-    love.graphics.points(center.x, center.y)
+    -- love.graphics.setPointSize(10)
+    -- love.graphics.points(center.x, center.y)
 end
 
 function RenderSystem.createQueue()
