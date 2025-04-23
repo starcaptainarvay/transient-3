@@ -1,0 +1,41 @@
+local t3 = require("transient")
+local dict = require("transient.util.dict")
+
+local BassBorderAnimation = t3.system("Animation:BassBorder")
+local NoteSystem = t3.system("Note")
+
+local MAX_BORDER_FX_THRESHOLD = 5
+local activeBorderEffects = {}
+
+function BassBorderAnimation:initSystem()
+    NoteSystem:on("bass-border", function(entity, data)
+        if #dict.keys(activeBorderEffects) >= MAX_BORDER_FX_THRESHOLD then return end
+
+        t3.addComponent(entity, "Animation:BassBorder", {
+            created = love.timer.getTime(),
+            expiry = 4
+        })
+    end)
+end
+
+function BassBorderAnimation:init(component, entity)
+    activeBorderEffects[component] = true
+
+    --[[ 
+    
+    -- TODO attach a Render component here 
+        that expires after the same time
+        hooked up to a shader
+
+    ]]
+end
+
+function BassBorderAnimation:update(component, entity)
+    if love.timer.getTime() - component.created > component.expiry then
+        t3.removeComponent(entity, component)
+    end
+end
+
+function BassBorderAnimation:destroy(component, entity)
+    activeBorderEffects[component] = nil
+end
