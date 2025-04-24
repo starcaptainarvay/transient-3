@@ -40,6 +40,7 @@ function PeakSystem:updateSystem()
             strbuf = ""
         elseif char == "e" then 
             -- dispatch set of peaks
+            print("PeakSystem got " .. #f_array .. " from the most recent packet.");
             local amplitude_avg = avg(a_array)
             for i = 1, #f_array do
                 PeakSystem.Events:dispatch("data", f_array[i], a_array[i], amplitude_avg, #f_array)
