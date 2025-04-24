@@ -12,6 +12,14 @@ function Vector.new(x, y)
     }, Vector)
 end
 
+function Vector.clone(v)
+    return Vector.new(v.x, v.y)
+end
+
+function Vector:copy()
+    return Vector.clone(self)
+end
+
 function Vector:unit()
     return Vector.new(self.x/self.magnitude, self.y/self.magnitude)
 end
