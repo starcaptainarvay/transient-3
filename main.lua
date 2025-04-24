@@ -8,6 +8,9 @@ local renderQueue, renderQueueCell, drawTexture = require("systems.RenderSystem"
 
 local serialSystem = require("systems.SerialSystem")
 local PeakSystem = require("systems.PeakSystem")
+local NoteSystem = require("systems.NoteSystem")
+
+local BassBorderAnimation = require("systems.animations.BassBorder")
 
 function love.load()
     -- TODO set up transient and workflows
