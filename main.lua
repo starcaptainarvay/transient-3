@@ -5,8 +5,8 @@ local vector = require("src.math.vector")
 
 local inputSystem = require("systems.InputSystem")
 local renderQueue, renderQueueCell, drawTexture = require("systems.RenderSystem").createQueue()
-local serialSystem = require("systems.SerialSystem")
 
+local serialSystem = require("systems.SerialSystem")
 local PeakSystem = require("systems.PeakSystem")
 
 function love.load()
