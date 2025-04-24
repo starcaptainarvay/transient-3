@@ -1,8 +1,13 @@
-local function rect(size, pos, line_width, color)
+local function rect(size, pos, line_width, line_color, fill_color)
     -- local pos, size = unpack(dim)
 
-    if color then
-        love.graphics.setColor(unpack(color))
+    if fill_color then
+        love.graphics.setColor(unpack(fill_color))
+        love.graphics.rectangle("fill", pos.x, pos.y, size.x, size.y)
+    end
+
+    if line_color then
+        love.graphics.setColor(unpack(line_color))
     end
 
     love.graphics.setLineWidth(line_width)
