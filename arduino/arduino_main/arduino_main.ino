@@ -1,6 +1,5 @@
-// TODO: Update 7s and other constants to use this
-// WARNING: Unsafe to change this value from 8 at the moment
 #define MAX_PEAKS 8
+#define PEAK_MIN_THRESHOLD 0 //! add if things get noisy!
 
 //---------------------------------------------------------------------------//
 // Global Variables
@@ -81,11 +80,11 @@ float FFT(byte N, float Frequency) {
     int num_levels = 0;
 
     // Determine the number of levels
-    for (int i = 0; i < 8; i++) {
-        if (levels[i] <= N) {
-            num_levels = i;
-        }
-    }
+    // for (int i = 0; i < 8; i++) {
+    //     if (levels[i] <= N) {
+    //         num_levels = i;
+    //     }
+    // }
     num_levels = 7;
 
     byte in_ps[levels[num_levels]] = {};   // Input for sequencing
@@ -145,28 +144,33 @@ float FFT(byte N, float Frequency) {
     // Peak detection
     x = 0;
     for (int i = 1; i < levels[num_levels - 1] - 1; i++) {
-        if (out_r[i] > out_r[i - 1] && out_r[i] > out_r[i + 1]) {
+        if (out_r[i] > out_r[i - 1] && out_r[i] > out_r[i + 1] && out_r[i] > PEAK_MIN_THRESHOLD) {
             in_ps[x++] = i;
         }
     }
 
     // Sort peaks by magnitude
-    for (int i = 0; i < x - 1; i++) {
-        for (int j = i + 1; j < x; j++) {
-            if (out_r[in_ps[i]] < out_r[in_ps[j]]) {
-                int temp = in_ps[i];
-                in_ps[i] = in_ps[j];
-                in_ps[j] = temp;
-            }
-        }
-    }
+    // for (int i = 0; i < x - 1; i++) {
+    //     for (int j = i + 1; j < x; j++) {
+    //         if (out_r[in_ps[i]] < out_r[in_ps[j]]) {
+    //             int temp = in_ps[i];
+    //             in_ps[i] = in_ps[j];
+    //             in_ps[j] = temp;
+    //         }
+    //     }
+    // }
 
     // Update global peak arrays
-    for (int i = 0; i < MAX_PEAKS; i++) {
+    //! reinstitute peak count if there nd up being too many.
+    //! music generates less than 20 ?
+    for (int i = 0; i < x; i++) {
         f_peak_freqs[i] = (out_im[in_ps[i] - 1] * out_r[in_ps[i] - 1] +
                            out_im[in_ps[i]] * out_r[in_ps[i]] +
                            out_im[in_ps[i] + 1] * out_r[in_ps[i] + 1]) /
                           (out_r[in_ps[i] - 1] + out_r[in_ps[i]] + out_r[in_ps[i] + 1]);
         f_peak_amps[i] = out_r[in_ps[i]];
     }
+    // Serial.print("*************");
+    // Serial.print(x);
+    // Serial.print("peaks in this set!!!!*******************");
 }
