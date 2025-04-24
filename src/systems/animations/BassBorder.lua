@@ -1,10 +1,12 @@
 local t3 = require("transient")
 local dict = require("transient.util.dict")
+local Vector = require("src.math.Vector")
 
 local BassBorderAnimation = t3.system("Animation:BassBorder")
 local NoteSystem = t3.system("Note")
+local RenderSystem = t3.system("Render") 
 
-local MAX_BORDER_FX_THRESHOLD = 5
+local MAX_BORDER_FX_THRESHOLD = 25
 local activeBorderEffects = {}
 
 function BassBorderAnimation:initSystem()
@@ -13,7 +15,7 @@ function BassBorderAnimation:initSystem()
 
         t3.addComponent(entity, "Animation:BassBorder", {
             created = love.timer.getTime(),
-            expiry = 4
+            expiry = 1
         })
     end)
 end
@@ -21,13 +23,15 @@ end
 function BassBorderAnimation:init(component, entity)
     activeBorderEffects[component] = true
 
-    --[[ 
-    
-    -- TODO attach a Render component here 
-        that expires after the same time
-        hooked up to a shader
+    t3.addComponent(entity, "Render", {
+        shaders = { "bassBorder" },
+        size = RenderSystem:getDimensions(),
+        position = Vector.new(),
+        expiry = component.expiry,
+        renderable = "rect",
+        argv = { 10, nil, {1.0, 1.0, 1.0, 1.0} }
+    })
 
-    ]]
 end
 
 function BassBorderAnimation:update(component, entity)
@@ -39,3 +43,5 @@ end
 function BassBorderAnimation:destroy(component, entity)
     activeBorderEffects[component] = nil
 end
+
+return BassBorderAnimation
