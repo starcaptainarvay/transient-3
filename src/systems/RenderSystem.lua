@@ -229,6 +229,16 @@ function RenderSystem.createQueue()
 end
 
 
+function RenderSystem:getDimensions()
+    return dimensions:copy()
+end
+function RenderSystem:getScreenCenter()
+    return center:copy()
+end
+function RenderSystem:getScreenOffset()
+    return offset:copy()
+end
+
 -- local a = vector.new(3, 3)
 -- local b = vector.new(1, 2)
 
