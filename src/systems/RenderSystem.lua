@@ -1,5 +1,6 @@
 local wf = require("workflower")
 local t3 = require("transient")
+local dict = require("transient.util.dict")
 
 local Renderables = require("src.renderables")
 
@@ -143,6 +144,10 @@ function RenderSystem:update(component, entity)
                 intensity = component.intensity, -- default 1
                 force = component.force -- default 0
             }
+
+            if component.shaderParams then
+                renderObject.shaders[shaderName] = dict.merge(renderObject.shaders[shaderName], component.shaderParams)
+            end
         end
     end
 
