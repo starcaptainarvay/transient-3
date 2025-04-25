@@ -9,6 +9,7 @@ local client, err
 local SocketSystem = t3.system("Socket")
 
 local serialPush
+SocketSystem.FIFO, serialPush = wf.queue()
 
 function SocketSystem:initSystem()
     client, err = socket.tcp()
@@ -27,8 +28,6 @@ function SocketSystem:initSystem()
     end
     
     print(string.format("Connected to %s:%d", host, port))
-
-    SocketSystem.FIFO, serialPush = wf.queue()
 end
 
 SocketSystem.Events = wf.observable()
