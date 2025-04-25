@@ -6,7 +6,7 @@ local vector = require("src.math.vector")
 local inputSystem = require("systems.InputSystem")
 local renderQueue, renderQueueCell, drawTexture = require("systems.RenderSystem").createQueue()
 
-local serialSystem = require("systems.SerialSystem")
+local socketSystem = require("systems.SocketSystem")
 local PeakSystem = require("systems.PeakSystem")
 local NoteSystem = require("systems.NoteSystem")
 local ParticleSystem = require("systems.animations.ParticleSystem")

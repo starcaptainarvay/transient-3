@@ -1,6 +1,6 @@
 local t3 = require("transient")
 local wf = require("workflower")
-local SerialSystem = require("systems.SerialSystem")
+local SocketSystem = require("systems.SocketSystem")
 
 local PeakSystem = t3.system("Peak")
 
@@ -24,7 +24,7 @@ function PeakSystem:initSystem()
 end
 
 function PeakSystem:updateSystem()
-    for char in SerialSystem.FIFO:consume() do
+    for char in SocketSystem.FIFO:consume() do
         if char == "b" then 
             -- clear buffer and arrays
             strbuf = ""
