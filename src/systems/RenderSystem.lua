@@ -16,7 +16,8 @@ local renderQueue, renderQueueCell
 --[[ ADJUSTABLE BOUNDS: ]]
 
     local AdjustingOn, setAdjustingOn = wf.bucket(nil, false)
-    local dimensions, center, offset
+    local dimensions = vector.new(1920, 1080)
+    local center, offset
 
     local KEY_ADJUST_MODE = "tab"
     local KEY_VECS = {
@@ -94,7 +95,7 @@ function RenderSystem:initSystem()
         position = vector.new(0, 0),
         -- shaders = { "test" },
         -- shaders = { "test2" },
-        argv = { 10, nil, {0.1, 0.5, 0.5, 1.0} } -- linewidth, stroke color, fill color
+        argv = { 10, nil, nil } -- linewidth, stroke color, fill color
     }
 
     RenderSystem.DebugCenterDot = {
