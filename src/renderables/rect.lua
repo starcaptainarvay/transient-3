@@ -3,9 +3,8 @@ local function rect(size, pos, line_width, line_color, fill_color)
 
     if fill_color then
         love.graphics.setColor(unpack(fill_color))
+        love.graphics.rectangle("fill", pos.x, pos.y, size.x, size.y)
     end
-
-    love.graphics.rectangle("fill", pos.x, pos.y, size.x, size.y)
 
     if line_width then
         if line_color then
