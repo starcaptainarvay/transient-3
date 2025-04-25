@@ -26,9 +26,9 @@ try:
     while True:
         if ser.in_waiting > 0:
             data = ser.read(1)
-            print(f"Received from serial: {data}")
+            # print(f"r {data}")
             client_socket.sendall(data)
-            print(f"Sent to socket: {data}")
+            # print(f"s {data}")
 
 except serial.SerialException as e:
     print(f"Error opening serial port: {e}")

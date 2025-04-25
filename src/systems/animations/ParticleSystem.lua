@@ -30,13 +30,15 @@ function ParticleSystem:initSystem()
         "particle_texture_5.png"
     }, 30))
 
+
+
     for _, particleSystemComponent in pairs(dict.map(textures, function(path)
         return t3.addComponent(ParticleSystemLocalEntity, "Particle", {
             texture = path,
             max = 100
         })
     end)) do
-        t3.addComponent(ParticleSystemLocalEntity, "Render", {
+        local renderComp = t3.addComponent(ParticleSystemLocalEntity, "Render", {
             size = vector.new(0, 0),
             position = vector.new(
                 RenderSystem:getDimensions().x * 0.75 * (math.random() - 0.5),
@@ -45,10 +47,19 @@ function ParticleSystem:initSystem()
             Enabled = false,
             renderable = "particle",
             shaders = { "distortion" },
+            shaderParams = {
+                willEffect = 0,
+                amplitudeEffect = 0
+            },
             shaderParams = {},
             intensity = math.random() * 10,
             argv = { particleSystemComponent.drawable }
         })
+
+        NoteSystem:on("willEffect", function(data)
+            renderComp.shaderParams.willEffect = data.count
+            renderComp.shaderParams.amplitudeEffect = data.amplitude_avg
+        end)
     end
 end
 

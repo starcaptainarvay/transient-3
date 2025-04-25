@@ -1,5 +1,5 @@
 #define MAX_PEAKS 8
-#define PEAK_MIN_THRESHOLD 0 //! add if things get noisy!
+#define PEAK_MIN_THRESHOLD 1000 // noise is less than this amount? peaks are in the 4-5 digit range
 
 //---------------------------------------------------------------------------//
 // Global Variables
@@ -7,15 +7,21 @@ int in[128];
 byte NoteV[13] = {8, 23, 40, 57, 76, 96, 116, 138, 162, 187, 213, 241, 255};
 float f_peak_freqs[MAX_PEAKS]; // Top 8 frequency peaks in descending order
 float f_peak_amps[MAX_PEAKS];
+int peak_count;
 
 //---------------------------------------------------------------------------//
 
 void setup() {
+    // pinMode(A0, INPUT);
     Serial.begin(115200);
+    // vTaskDelay(1000 / portTICK_PERIOD_MS);
 }
 
 void loop() {
+    // Serial.println("Hello?");
+    // vTaskDelay(1000 / portTICK_PERIOD_MS);
     detect_peaks();
+
 }
 
 //----------------------------- Chord Detection Function ----------------------------------------------//
@@ -59,7 +65,7 @@ void detect_peaks() {
 
         // Serial.println("FFT performed, outputs:");
         Serial.print('b');
-        for (int i = 0; i < MAX_PEAKS; i++) {
+        for (int i = 0; i < peak_count; i++) {
             // Serial.print("\tf_peak_freqs[" + String(i) + "] = " + String(f_peak_freqs[i]));
             // Serial.println("\tf_peak_amps[" + String(i) + "] = " + String(f_peak_amps[i]));
             Serial.print(String(f_peak_freqs[i]));
@@ -197,6 +203,7 @@ float FFT(byte N, float Frequency) {
                           (out_r[in_ps[i] - 1] + out_r[in_ps[i]] + out_r[in_ps[i] + 1]);
         f_peak_amps[i] = out_r[in_ps[i]];
     }
+    peak_count = x;
     // Serial.print("*************");
     // Serial.print(x);
     // Serial.print("peaks in this set!!!!*******************");
