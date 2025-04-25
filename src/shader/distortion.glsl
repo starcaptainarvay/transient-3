@@ -1,6 +1,8 @@
 extern float tick;
 extern float delta;
 extern float intensity;
+extern float willEffect;
+extern float amplitudeEffect;
 
 #define PI 3.14159265358979323846
 
@@ -50,9 +52,10 @@ vec4 effect(vec4 color, Image texture, vec2 texture_coords, vec2 screen_coords) 
     vec2 uv = screen_coords / vec2(love_ScreenSize.xy);
 
     // Parameters for distortion
-    float distortionStrength = delta * 20; // Strength of the distortion
-    float waveFrequency = 5.0; // Frequency of the distortion waves
-    float speed = mod(tick, PI); // Speed of the distortion animation
+    // TODO multiply by will effect
+    float distortionStrength = (amplitudeEffect/10000); // Strength of the distortion 
+    float waveFrequency = 5; // Frequency of the distortion waves
+    float speed = willEffect/10; // Speed of the distortion animation
 
     // Calculate distortion offset
     float offsetX = sin(uv.y * waveFrequency + tick * speed) * distortionStrength;

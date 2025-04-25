@@ -28,6 +28,8 @@ function NoteSystem:snapFrequencyToGrid(frequency)
     return note
 end
 
+local NoteSystemEvents = wf.observable()
+
 function NoteSystem:initSystem()
     -- Create an entity for each MIDI note
     for note = MIDI_START, MIDI_END do
@@ -52,15 +54,23 @@ function NoteSystem:initSystem()
         if queueIncomingEvent then
             queueIncomingEvent({ frequency = frequency, amplitude = amplitude, amplitude_avg = amplitude_avg, count = count })
         end
+
+        if count >= 3 then
+            print("Will effecting...")
+            NoteSystemEvents:dispatch("willEffect", {
+                count = count,
+                amplitude_avg = amplitude_avg
+            })
+        end
     end)
 end
 
-local NoteSystemEvents = wf.observable()
 
 function NoteSystem:update(component, entity)
     for event in component.incomingEvents:consume() do
         local pitch, amplitude, amplitude_avg, count = event.frequency, event.amplitude, event.amplitude_avg, event.count
-        print("Got pitch: " .. pitch .. " and amplitude " .. amplitude .. " -- midi = " .. component.midi)
+        print("Got pitch: " .. pitch .. " and amplitude " .. amplitude .. " -- midi = " .. component.midi .. " count = " .. count)
+
         if component.midi < 38 then
             NoteSystemEvents:dispatch("bass-border", entity, {
                 type = "note",
