@@ -173,7 +173,7 @@ function RenderSystem:preUpdate()
     -- love.graphics.clear()
 end
 
-function RenderSystem:updateSystem()
+function RenderSystem:updateSystem(dt)
     RenderSystem.DebugBoundingRect.Enabled = AdjustingOn:get()
     RenderSystem.DebugCenterDot.Enabled = AdjustingOn:get()
 
@@ -198,6 +198,9 @@ function RenderSystem:updateSystem()
         --     --     }
         --     -- }
         -- }, "rect", 10})
+
+        self:update(RenderSystem.DebugBoundingRect, RenderSystem.DebugBoundingRect.entity, dt)
+        self:update(RenderSystem.DebugCenterDot, RenderSystem.DebugCenterDot.entity, dt)
     end
 
     center = (dimensions/2):floor() + offset
@@ -205,21 +208,27 @@ end
 
 function RenderSystem.drawTexture(settings, object, ...)
     love.graphics.setShader()
+    love.graphics.setColor(1, 1, 1, 1)
 
     settings = settings or {}
 
     if settings.shaders then
         for shaderId, params in pairs(settings.shaders) do
             Shader.apply(shaderId, params)
-        end
-    end
 
-    if Renderables[object] then
-        Renderables[object](...)
+            if Renderables[object] then
+                Renderables[object](...)
+            end
+        end
+    else
+        if Renderables[object] then
+            Renderables[object](...)
+        end
     end
 
     -- love.graphics.setPointSize(10)
     -- love.graphics.points(center.x, center.y)
+    -- love.graphics.setShader()
 end
 
 function RenderSystem.createQueue()

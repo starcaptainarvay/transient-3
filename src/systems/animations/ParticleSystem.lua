@@ -28,7 +28,7 @@ function ParticleSystem:initSystem()
         "particle_texture_3.png",
         "particle_texture_4.png",
         "particle_texture_5.png"
-    }, 60))
+    }, 30))
 
     for _, particleSystemComponent in pairs(dict.map(textures, function(path)
         return t3.addComponent(ParticleSystemLocalEntity, "Particle", {
@@ -43,6 +43,8 @@ function ParticleSystem:initSystem()
                 RenderSystem:getDimensions().y * 0.75 * (math.random() - 0.5)
             ),
             renderable = "particle",
+            shaders = { "distortion" },
+            intensity = math.random() * 10,
             argv = { particleSystemComponent.drawable }
         })
     end
