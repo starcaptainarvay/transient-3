@@ -1,72 +1,44 @@
--- local port = "COM3";
--- local baud = 9600
+-- Lua Socket Reading Code
 
--- os.execute("powershell $port= new-Object System.IO.Ports.SerialPort "..port..","..baud..",None,8,one;$port.open();$port.close();")
+local socket = require("socket")
 
--- local serial = io.open(port,"r")
--- serial:write("0,5,255,2,1000,true")
--- serial:flush()
+-- Socket configuration (must match the Python program)
+local host = "127.0.0.1"
+local port = 12345
 
--- while true do
---     local char = serial:read(1)
---     if char then
---         print(char)
---     end
--- end
-
--- write example: replace all below "local serial" line with:
-
--- local serial = io.open(port,"w")
--- serial:write("0,5,255,2,1000,true")
--- serial:flush()
--- serial:close())
-
--- new example
-
-local PORT, BAUD = "COM3", 115200
-
-local command = string.format('plink -serial %s -sercfg %d,8,n,1 -batch', PORT, BAUD)
-
-local serial = io.popen(command,"r")
-if not serial then
-    error("Failed to open serial port: " .. PORT)
+local client, err = socket.tcp()
+if not client then
+  print("Error creating socket:", err)
+  return
 end
 
-local strbuf = ""
-local f_array = {}
-local a_array = {}
+client:settimeout(5) -- Set a timeout for connection attempts (in seconds)
 
+local ok, err = client:connect(host, port)
+if not ok then
+  print(string.format("Error connecting to %s:%d: %s", host, port, err))
+  return
+end
+
+print(string.format("Connected to %s:%d", host, port))
 
 while true do
-    local char = serial:read(1)
-    if char then
-        -- io.write(char)
+  local data, err = client:receive(1) -- Receive 1 byte at a time
 
-        if char == "b" then 
-            -- clear buffer and arrays
-            print("Got a b -- clearing buffer and arrays")
-            strbuf = ""
-            f_array = {}
-            a_array = {}
-        elseif char == "f" then
-            -- add number to frequency list
-            print("Got a f -- adding to frequency list")
-            table.insert(f_array, tonumber(strbuf))
-            strbuf = ""
-        elseif char == "a" then
-            -- add amplitude to amplitude list
-            print("Got an a -- adding to amplitude list")
-            table.insert(a_array, tonumber(strbuf))
-            strbuf = ""
-        elseif char == "e" then 
-            print("Got an e -- would trigger functionality using new peaks")
-            print("Frequency list: " .. table.concat(f_array, ", "))
-            print("Amplitude list: " .. table.concat(a_array, ", "))
-            -- trigger peak set ready flag
-        else -- char is part of a number 
-            -- add char to string buffer
-            print("Adding char " .. char .. " to buffer " .. strbuf)
-            strbuf = strbuf .. char
-        end 
+  if not data then
+    if err == "timeout" then
+      -- No data received within the timeout, continue listening
+      -- You might want to add a small delay here to avoid busy-waiting
+      socket.sleep(0.01)
+    else
+      print("Error receiving data:", err)
+      break
     end
-end 
+  else
+    print(string.format("Received from socket: %q", data))
+    -- You can process the received 'data' here
+  end
+end
+
+print("Connection closed.")
+client:close()
