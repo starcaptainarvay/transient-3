@@ -6,7 +6,7 @@ local function rect(size, pos, line_width, line_color, fill_color)
         love.graphics.rectangle("fill", pos.x, pos.y, size.x, size.y)
     end
 
-    if line_width then
+    if line_width and line_width ~= 0 then
         if line_color then
             love.graphics.setColor(unpack(line_color))
         end

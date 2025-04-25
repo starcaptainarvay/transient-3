@@ -28,6 +28,7 @@ void loop() {
 void detect_peaks() {
     unsigned long start_time, end_time;
     float sample, sum_avg = 0, sum_rms = 0, sampling_rate;
+    char incoming_byte;
 
     start_time = micros();
     for (int i = 0; i < 128; i++) {
@@ -68,6 +69,32 @@ void detect_peaks() {
         }
         Serial.print('e');
         Serial.flush(); // Ensure all data is sent before next iteration
+
+        // for (int i = 0; i < 100; i++)
+        // {
+        //     if (Serial.available())
+        //     {
+        //         incoming_byte = Serial.read();
+        //         if (incoming_byte == 'r') 
+        //         {
+        //             // Serial.println("FFT performed, outputs:");
+        //             Serial.print('b');
+        //             for (int i = 0; i < MAX_PEAKS; i++) {
+        //                 // Serial.print("\tf_peak_freqs[" + String(i) + "] = " + String(f_peak_freqs[i]));
+        //                 // Serial.println("\tf_peak_amps[" + String(i) + "] = " + String(f_peak_amps[i]));
+        //                 Serial.print(String(f_peak_freqs[i]));
+        //                 Serial.print('f');
+        //                 Serial.print(String(f_peak_amps[i]));
+        //                 Serial.print('a');
+        //             }
+        //             Serial.print('e');
+        //             Serial.flush(); // Ensure all data is sent before next iteration
+        //         }
+        //     }
+        // }
+
+
+        
     }
 }
 
