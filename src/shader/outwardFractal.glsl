@@ -1,5 +1,8 @@
 extern float tick; // Time in seconds since the start of the shader
 extern float gain;
+extern float delta;
+extern float intensity;
+// extern int use_delta;
 extern vec2 screen_offset; // Offset of the drawing's origin in screen coordinates
 
 vec3 palette( float t ) {
@@ -16,10 +19,10 @@ vec4 fractal(vec4 color, Image texture, vec2 texture_coords, vec2 screen_coords)
     vec2 uv0 = uv;
     vec3 finalColor = vec3(0.0);
 
-    float scaled_tick = tick * 7;
+    float scaled_tick = tick * 5;
 
     for (float i = 0.0; i < 4.0; i++) {
-        uv = fract(uv * 1.5) - 0.5;
+        uv = (fract(uv * 1.5) - 0.5) * (intensity);
 
         float d = length(uv) * exp(-length(uv0));
 
@@ -65,6 +68,14 @@ vec4 spatialDistortion(vec4 inputColor, vec2 screen_coords) {
     return inputColor * vec4(uv, 1.0, 1.0);
 }
 
+vec4 fadeOut(vec4 color, float tick) {
+    if (tick > 0.6) {
+        float fadeFactor = 1.0 - smoothstep(0.6, 1.2, tick);
+        return color * vec4(1.0, 1.0, 1.0, fadeFactor);
+    }
+    return color;
+}
+
 vec4 effect(vec4 color, Image texture, vec2 texture_coords, vec2 screen_coords) {
     // Apply fractal effect first
     vec4 fractalColor = fractal(color, texture, texture_coords, screen_coords);
@@ -73,5 +84,8 @@ vec4 effect(vec4 color, Image texture, vec2 texture_coords, vec2 screen_coords) 
     vec4 distortedColor = spatialDistortion(fractalColor, screen_coords);
 
     // Apply vignette to the final result
-    return vignette(distortedColor, screen_coords);
+    vec4 vignettedColor = vignette(distortedColor, screen_coords) * 1.5;
+
+    // Apply fade-out effect based on tick
+    return fadeOut(vignettedColor, tick);
 }

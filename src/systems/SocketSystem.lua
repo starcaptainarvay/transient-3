@@ -37,7 +37,7 @@ function SocketSystem:updateSystem()
 
     if not data then
         if err ~= "timeout" then -- ignore timeout error
-          print("Error receiving data:", err)
+          -- print("Error receiving data:", err)
         end
     else
         serialPush(data)

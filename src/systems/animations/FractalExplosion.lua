@@ -9,28 +9,39 @@ local RenderSystem = t3.system("Render")
 
 local activeExplosions = {}
 
+local function amplitude_to_gain(amplitude)
+    return math.sqrt(math.sqrt(math.sqrt(amplitude / 15000))) - 0.25
+end
+
 function FractalExplosion:initSystem()
     NoteSystem:on("fractal-explosion", function(entity, midi, pitch, amplitude, color)
         color = color or { math.random(), math.random(), math.random(), 1 }
 
         if activeExplosions[midi] then
-            activeExplosions[midi].fractal.shaderParams.gain = amplitude / 15000
+            activeExplosions[midi].fractal.shaderParams.gain = amplitude_to_gain(amplitude)
             activeExplosions[midi].fractal.shaderParams.pitch = pitch
             return
         end
 
         activeExplosions[midi] = t3.addComponent(entity, "Animation:FractalExplosion", {
             midi = midi,
-            gain = amplitude / 15000,
+            gain = amplitude_to_gain(amplitude),
             pitch = pitch,
             color = color
         })
     end)
 end
 
+local function lerp(a, b, t)
+    return a + (b - a) * t
+end
+
 function FractalExplosion:init(component, entity)
+    print(component.gain)
+
     component.created = love.timer.getTime()
-    component.expiry = 0.3
+    component.expiry = 0.8 + component.gain * 0.2
+    component.intensity = component.gain
 
     component.fractal =  t3.addComponent(entity, "Render", {
         size = vector.new(
@@ -55,6 +66,8 @@ function FractalExplosion:init(component, entity)
 end
 
 function FractalExplosion:update(component, entity)
+    component.intensity = lerp(component.intensity, component.gain, 0.1)
+
     if (love.timer.getTime() - component.created) >= component.expiry then
         t3.removeComponent(entity, component)
     end
