@@ -6,11 +6,12 @@ local BassBorderAnimation = t3.system("Animation:BassBorder")
 local NoteSystem = t3.system("Note")
 local RenderSystem = t3.system("Render") 
 
-local MAX_BORDER_FX_THRESHOLD = 25
+local MAX_BORDER_FX_THRESHOLD = 5
 local activeBorderEffects = {}
 
 function BassBorderAnimation:initSystem()
     NoteSystem:on("bass-border", function(entity, data)
+        print("bass-border received")
         if #dict.keys(activeBorderEffects) >= MAX_BORDER_FX_THRESHOLD then return end
 
         t3.addComponent(entity, "Animation:BassBorder", {
@@ -23,6 +24,8 @@ end
 function BassBorderAnimation:init(component, entity)
     activeBorderEffects[component] = true
 
+    print("Initialized bassborder component")
+
     t3.addComponent(entity, "Render", {
         shaders = { "bassBorder" },
         size = RenderSystem:getDimensions(),
@@ -31,10 +34,10 @@ function BassBorderAnimation:init(component, entity)
         renderable = "rect",
         argv = { 10, nil, {1.0, 1.0, 1.0, 1.0} }
     })
-
 end
 
 function BassBorderAnimation:update(component, entity)
+    print("Updating bassborder component")
     if love.timer.getTime() - component.created > component.expiry then
         t3.removeComponent(entity, component)
     end

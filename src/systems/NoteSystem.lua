@@ -60,7 +60,7 @@ local NoteSystemEvents = wf.observable()
 function NoteSystem:update(component, entity)
     for event in component.incomingEvents:consume() do
         local pitch, amplitude, amplitude_avg, count = event.frequency, event.amplitude, event.amplitude_avg, event.count
-        -- print("Got pitch: " .. pitch .. " and amplitude " .. amplitude .. " -- midi = " .. component.midi)
+        print("Got pitch: " .. pitch .. " and amplitude " .. amplitude .. " -- midi = " .. component.midi)
         if component.midi < 38 then
             NoteSystemEvents:dispatch("bass-border", entity, {
                 type = "note",
