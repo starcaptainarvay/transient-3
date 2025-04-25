@@ -42,8 +42,10 @@ function ParticleSystem:initSystem()
                 RenderSystem:getDimensions().x * 0.75 * (math.random() - 0.5),
                 RenderSystem:getDimensions().y * 0.75 * (math.random() - 0.5)
             ),
+            Enabled = false,
             renderable = "particle",
             shaders = { "distortion" },
+            shaderParams = {},
             intensity = math.random() * 10,
             argv = { particleSystemComponent.drawable }
         })

@@ -70,6 +70,10 @@ function NoteSystem:update(component, entity)
             })
         end
     end
+
+    if math.random() > 0.995 then
+        NoteSystemEvents:dispatch("fractal-explosion", entity, 73, 440, 17000)
+    end
 end
 
 function NoteSystem:on(...)

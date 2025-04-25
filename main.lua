@@ -9,7 +9,9 @@ local renderQueue, renderQueueCell, drawTexture = require("systems.RenderSystem"
 local socketSystem = require("systems.SocketSystem")
 local PeakSystem = require("systems.PeakSystem")
 local NoteSystem = require("systems.NoteSystem")
+
 local ParticleSystem = require("systems.animations.ParticleSystem")
+local FractalExplosion = require("systems.animations.FractalExplosion")
 
 local screen, screenData
 local texture = {}

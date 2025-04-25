@@ -133,6 +133,11 @@ function RenderSystem:update(component, entity)
         renderObject.position = component.position
     end
 
+    -- Convert position to absolute coordinates before queuing
+    if renderObject.position then
+        renderObject.position = renderObject.position + center + offset
+    end
+
     if component.shaders then
         renderObject.shaders = {}
 
@@ -142,18 +147,14 @@ function RenderSystem:update(component, entity)
                 tick = component.now - component.created,
                 delta = component.delta,
                 intensity = component.intensity, -- default 1
-                force = component.force -- default 0
+                force = component.force, -- default 0
+                screen_offset = {renderObject.position.x, renderObject.position.y} 
             }
 
             if component.shaderParams then
                 renderObject.shaders[shaderName] = dict.merge(renderObject.shaders[shaderName], component.shaderParams)
             end
         end
-    end
-
-    -- Convert position to absolute coordinates before queuing
-    if renderObject.position then
-        renderObject.position = renderObject.position + center + offset
     end
 
     renderQueueCell({
