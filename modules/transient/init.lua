@@ -76,13 +76,13 @@ local entitiesUpdatedQueue, triggerEntitiesUpdatedEvent = wf.queue(nil)
 local update_single_system = wf({
     "queue-update",
     {"queue-update", "dispatch-entities-updated"},
-    ["queue-update"] = function(system)
+    ["queue-update"] = function(system, ...)
         if system.preUpdate then
            system:preUpdate()
         end
 
-        system:updateEntities()
-        return nil, system.name, system:listEntities()
+        system:updateEntities(...)
+        return nil, system.name, system:listEntities(), ...
     end,
     ["dispatch-entities-updated"] = triggerEntitiesUpdatedEvent
 })
@@ -95,22 +95,22 @@ end)
 local update_systems = wf({
     "update-entities",
     {"update-entities", "update-system"},
-    ["update-entities"] = function(systems)
+    ["update-entities"] = function(systems, ...)
         for _, system in pairs(systems) do
-            update_single_system(system)
+            update_single_system(system, ...)
         end
-        return nil, systems
+        return nil, systems, ...
     end,
-    ["update-system"] = function(systems)
+    ["update-system"] = function(systems, ...)
         for _, system in pairs(systems) do
-            system:updateSystem()
+            system:updateSystem(...)
         end
-        return nil, systems
+        return nil, systems, ...
     end
 })
 
-function transient.update()
-    update_systems(_systems)
+function transient.update(dt)
+    update_systems(_systems, dt)
 end
 
 local __meta = {}

@@ -28,19 +28,19 @@ function System:listEntities()
     return self._entities
 end
 
-function System:updateEntities()
+function System:updateEntities(...)
     for _, component in pairs(self._entities) do
-        self:update(component, component.entity)
+        self:update(component, component.entity, ...)
     end
 end
 
 function System:init(componentData, entity) end
-function System:update(componentData, entity) end
+function System:update(componentData, entity, ...) end
 
 function System:destroy(componentData, entity) end
 function System:initSystem() end
 function System:preUpdate() end
-function System:updateSystem() end
+function System:updateSystem(...) end
 
 function System.__tostring(self)
     return self.name .."System: " .. #(self._entities) .. " entities"
