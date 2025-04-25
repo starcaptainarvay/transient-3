@@ -78,6 +78,8 @@ function NoteSystem:update(component, entity)
                 pitch = pitch,
                 amplitude = amplitude
             })
+        elseif component.midi < 88 then
+            NoteSystemEvents:dispatch("will-effect-amplitude", event.amplitude_avg)
         end
     end
 

@@ -44,14 +44,13 @@ function ParticleSystem:initSystem()
                 RenderSystem:getDimensions().x * 0.75 * (math.random() - 0.5),
                 RenderSystem:getDimensions().y * 0.75 * (math.random() - 0.5)
             ),
-            Enabled = false,
+            -- Enabled = false,
             renderable = "particle",
             shaders = { "distortion" },
             shaderParams = {
                 willEffect = 0,
                 amplitudeEffect = 0
             },
-            shaderParams = {},
             intensity = math.random() * 10,
             argv = { particleSystemComponent.drawable }
         })
@@ -59,6 +58,10 @@ function ParticleSystem:initSystem()
         NoteSystem:on("willEffect", function(data)
             renderComp.shaderParams.willEffect = data.count
             renderComp.shaderParams.amplitudeEffect = data.amplitude_avg
+        end)
+
+        NoteSystem:on("will-effect-amplitude", function(data)
+            particleSystemComponent.drawable:setEmissionRate(math.floor(200 * data)) -- Emit 200 particles per second for a sharp impulse
         end)
     end
 end
