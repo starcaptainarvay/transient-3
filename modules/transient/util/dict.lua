@@ -1,4 +1,47 @@
 local dict = {}
+
+function dict.echo(o, n)
+    local t = {}
+
+    for i=1, n do
+        table.insert(t, o)
+    end
+
+    return t
+end
+
+function dict.flat(t)
+    local output = {}
+
+    for _, v in pairs(t) do
+        if type(v) == "table" then
+            for _, v2 in pairs(v) do
+                table.insert(output, v2)
+            end
+        else
+            table.insert(output, v)
+        end
+    end
+
+    return output
+end
+
+function dict.fullflat(t)
+    local output = {}
+
+    for _, v in pairs(t) do
+        if type(v) == "table" then
+            for _, v2 in pairs(v) do
+                table.insert(output, dict.fullflat(v2))
+            end
+        else
+            table.insert(output, v)
+        end
+    end
+
+    return output
+end
+
 function dict.map(tab, f)
     local output = {}
 
