@@ -157,7 +157,7 @@ function RenderSystem:update(component, entity)
         -- Renderable args:
             renderObject.size,
             renderObject.position,
-            unpack(component.argv)
+            unpack(component.argv or {})
     })
 
     if component.expiry then
