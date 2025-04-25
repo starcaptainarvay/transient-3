@@ -9,8 +9,11 @@ local renderQueue, renderQueueCell, drawTexture = require("systems.RenderSystem"
 local serialSystem = require("systems.SerialSystem")
 local PeakSystem = require("systems.PeakSystem")
 local NoteSystem = require("systems.NoteSystem")
+local ParticleSystem = require("systems.animations.ParticleSystem")
 
-local BassBorderAnimation = require("systems.animations.BassBorder")
+local screen, screenData
+local texture = {}
+local particleSystem = {}
 
 function love.load()
     -- TODO set up transient and workflows
@@ -33,16 +36,10 @@ function love.load()
     end)
 end
 
+function love.update(dt)
+    t3.update(dt) -- Update state of Transient 3 ECS
 
-
-function love.update()
-    -- print('drawing rect:')
-    -- print('drew')
-    t3.update() -- Update state of Transient 3 ECS
-
-    -- for object in serialSystem.FIFO:consume() do
-    --     io.write(object)
-    -- end
+    -- print(dt)
 end
 
 function love.draw()
