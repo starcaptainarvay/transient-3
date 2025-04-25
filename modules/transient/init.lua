@@ -20,6 +20,8 @@ function transient.addComponent(entity, componentSystem, componentData)
 
     table.insert(_entities[entity], componentData)
     _systems[componentSystem]:addEntity(componentData)
+
+    return componentData
 end
 
 function transient.removeComponent(entity, componentData)
