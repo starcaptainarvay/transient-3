@@ -42,6 +42,23 @@ function dict.fullflat(t)
     return output
 end
 
+function dict.merge(tab, ...)
+    local ordered = {...}
+    local out = {}
+
+    for key, value in pairs(tab) do
+        out[key] = value
+    end
+
+    for i=1, #ordered do
+        for key, value in pairs(ordered[i]) do
+            out[key] = value
+        end
+    end
+
+    return out
+end
+
 function dict.map(tab, f)
     local output = {}
 
