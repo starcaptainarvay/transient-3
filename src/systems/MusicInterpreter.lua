@@ -92,7 +92,7 @@ local function hsvToRgb(h, s, v)
     return {r, g, b}
 end
 
-local function mapHarmonyVectorToColor(harmonyVector, ...)
+local function mapHarmonyVectorToColor(harmonyVector)
     -- Normalize the vector to get a weighted average of pitch classes
     local totalWeight = 0
     for _, weight in ipairs(harmonyVector) do
@@ -114,7 +114,7 @@ local function mapHarmonyVectorToColor(harmonyVector, ...)
     local blue = 0
 
     for i, weight in ipairs(normalizedVector) do
-        local hue = i / 12 -- Map pitch class to a hue (0 to 1)
+        local hue = i / 12 -- Map pitch class to a hue (0 to 1, covering the full rainbow)
         local color = hsvToRgb(hue, 1, weight) -- Convert hue to RGB with full saturation and brightness
         red = red + color[1]
         green = green + color[2]
@@ -126,7 +126,19 @@ local function mapHarmonyVectorToColor(harmonyVector, ...)
     green = math.min(1, green)
     blue = math.min(1, blue)
 
-    return nil, {red, green, blue, 1}, ... -- Return the final color with full alpha
+    local mod = {(red * blue)/green, (green * red)/blue, (blue * green)/red/red, 1}
+
+    local maxColor = math.max(mod[1], mod[2], mod[3])
+
+    if maxColor > 0 then
+        mod[1] = mod[1] / maxColor
+        mod[2] = mod[2] / maxColor
+        mod[3] = mod[3] / maxColor
+    end
+
+    -- print(mod)
+
+    return nil, mod
 end
 
 function Interpreter:initSystem()
