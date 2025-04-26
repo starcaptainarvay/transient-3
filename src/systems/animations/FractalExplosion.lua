@@ -16,8 +16,11 @@ local function amplitude_to_gain(amplitude)
 end
 
 function FractalExplosion:initSystem()
-    AttackSystem:on("attack", function(entity, midi, pitch, amplitude, color)
-        color = color or { math.random(), math.random(), math.random(), 1 }
+    AttackSystem:on("attack", function(entity, midi, pitch, amplitude)
+        print("attack", entity, midi, pitch, amplitude)
+        print("attacked")
+
+        print(activeExplosions[midi])
 
         if activeExplosions[midi] then
             activeExplosions[midi].fractal.shaderParams.gain = amplitude_to_gain(amplitude)
@@ -25,14 +28,15 @@ function FractalExplosion:initSystem()
             return
         end
 
+        print("amplitude", amplitude)
+
+        print("hello")
+
         activeExplosions[midi] = t3.addComponent(entity, "Animation:FractalExplosion", {
             midi = midi,
             gain = amplitude_to_gain(amplitude),
-            pitch = pitch,
-            color = color
+            pitch = pitch
         })
-
-        -- print("epxloded")
     end)
 end
 
@@ -42,6 +46,8 @@ end
 
 function FractalExplosion:init(component, entity)
     -- print(component.gain)
+
+    print("init fractal")
 
     component.created = love.timer.getTime()
     component.expiry = 0.4 + component.gain * 0.2

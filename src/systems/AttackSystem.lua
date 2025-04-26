@@ -14,6 +14,7 @@ local AMP_DELTA_SCALING = 2*10^3 -- TODO tune this value
 local midi_note_last_amplitudes = {}
 local midi_note_attack_sums = {}
 local midi_note_attacked = {}
+local watchers = {}
 
 local AttackSystemEvents = wf.observable()
 
@@ -24,7 +25,7 @@ function AttackSystem:initSystem()
         midi_note_attacked[note] = false
         local noteEntity = NoteSystem:getMidiNoteEntity(note)
         -- print("noteEntity", noteEntity)
-        t3.addComponent(noteEntity, "Attack", {
+        watchers[note] = t3.addComponent(noteEntity, "Attack", {
             type = "watcher",
             midi = note
         })
@@ -39,6 +40,13 @@ function AttackSystem:initSystem()
 
         if ampDelta > 0 then 
             midi_note_attack_sums[midi] = midi_note_attack_sums[midi] + 1
+
+            if watchers[midi] then
+                watchers[midi].frequency = frequency
+                watchers[midi].amplitude = amplitude
+                watchers[midi].amplitude_avg = amplitude_avg
+                watchers[midi].count = count
+            end
 
             t3.addComponent(noteEntity, "Attack", {
                 type = "datapoint",
@@ -58,6 +66,7 @@ end
 
 function AttackSystem:update(component, entity)
     if component.type == "watcher" then
+        -- print(component.frequency, component.amplitude)
         if midi_note_attack_sums[component.midi] > ATTACK_SUM_THRESHOLD then
             -- print("Watcher at " .. component.midi .. " above threshold with " .. midi_note_attack_sums[component.midi])
             if not midi_note_attacked[component.midi] then
