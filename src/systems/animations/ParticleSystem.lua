@@ -18,7 +18,6 @@ function ParticleSystem.loadTexture(texturePath)
     end
 
     Textures[texturePath] = love.graphics.newImage(ROOT_PATH:format(texturePath))
-    Textures[texturePath]:setWrap("clamp", "clamp") -- Prevent tiling by clamping texture coordinates
     return Textures[texturePath]
 end
 
@@ -34,11 +33,11 @@ function ParticleSystem:initSystem()
     end)
 
     local textures = dict.flat(dict.echo({
-        "particle_texture_1.png",
-        "particle_texture_2.png",
-        "particle_texture_3.png",
-        "particle_texture_4.png",
-        "particle_texture_5.png"
+        "blackSmoke00.png",
+        "blackSmoke01.png",
+        "blackSmoke02.png",
+        "blackSmoke03.png",
+        "blackSmoke04.png"
     }, 10))
 
     for _, particleSystemComponent in pairs(dict.map(textures, function(path)
@@ -61,7 +60,7 @@ function ParticleSystem:initSystem()
                 amplitudeEffect = 0
             },
             intensity = math.random() * 10,
-            argv = { particleSystemComponent.drawable, { 0.1, 0.7, 0.5, 1 } }
+            argv = { particleSystemComponent.drawable, { 0.1, 0.7, 0.5, 0.7 } }
         })
 
         NoteSystem:on("willEffect", function(data)
@@ -76,7 +75,7 @@ local sizeCurve = {0.5, 1, 2, 4, 8, 6, 3, 0.5}
 function ParticleSystem:init(component, entity)
     local ps = love.graphics.newParticleSystem(self.loadTexture(component.texture), component.max)
 
-    local scale = math.random(0.5, 1.5)
+    local scale = math.random(0.5, 1.5) * 0.2
 
     ps:setParticleLifetime(0.1, 0.3)
     ps:setEmissionRate(0) -- Emit 200 particles per second for a sharp impul se
@@ -87,6 +86,14 @@ function ParticleSystem:init(component, entity)
         1, 1, 1, 1,  -- Start fully opaque white
         1, 0.5, 0.5, 0.8,  -- Transition to a softer red
         0.5, 0.5, 1, 0.5,  -- Transition to a soft blue
+        0, 0, 0, 0  -- Fade to transparent
+    )
+    ps:setColors(
+        0, 0, 0, 0,  -- Start fully opaque white
+        1, 1, 1, 0.2,  -- Transition to a softer red
+        1, 1, 1, 0.7,  -- Transition to a soft blue
+        1, 1, 1, 1,  -- Transition to a soft blue
+        0.7, 0.7, 0.7, 0.4,  -- Transition to a soft blue
         0, 0, 0, 0  -- Fade to transparent
     )
     ps:setSpread(math.pi * 2)
