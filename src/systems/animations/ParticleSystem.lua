@@ -66,6 +66,7 @@ function ParticleSystem:initSystem()
         NoteSystem:on("willEffect", function(data)
             renderComp.shaderParams.willEffect = data.count
             renderComp.shaderParams.amplitudeEffect = data.amplitude_avg
+            renderComp.shaderParams.frequency = data.frequency^(1/8)
         end)
     end
 end

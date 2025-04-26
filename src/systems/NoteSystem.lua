@@ -59,7 +59,8 @@ function NoteSystem:initSystem()
             -- print("Will effecting...")
             NoteSystemEvents:dispatch("willEffect", {
                 count = count,
-                amplitude_avg = amplitude_avg
+                amplitude_avg = amplitude_avg,
+                frequency = frequency
             })
         end
     end)
