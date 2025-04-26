@@ -37,7 +37,7 @@ local function lerp(a, b, t)
 end
 
 function FractalExplosion:init(component, entity)
-    print(component.gain)
+    -- print(component.gain)
 
     component.created = love.timer.getTime()
     component.expiry = 0.8 + component.gain * 0.2
