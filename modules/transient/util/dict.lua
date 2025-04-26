@@ -114,13 +114,14 @@ function dict.values(tab)
 end
 
 function dict.reduce(tab, f)
-    local output = {}
+    local output, first = nil, true
 
-    for k, v in pairs(tab) do
-        if output[k] == nil then
-            output[k] = v
+    for _, v in pairs(tab) do
+        if first then
+            output = v
+            first = false
         else
-            output[k] = f(output[k], v)
+            output = f(output, v)
         end
     end
 
