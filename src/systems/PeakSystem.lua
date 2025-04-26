@@ -12,6 +12,8 @@ local a_array = {}
 
 PeakSystem.Events = wf.observable()
 
+local extra = wf.observable()
+
 local function avg(array)
     local sum = 0
     for _, val in pairs(array) do
@@ -44,6 +46,36 @@ function PeakSystem:initSystem()
             for i = 1, #f2 do
                 PeakSystem.Events:dispatch("data", f2[i], a2[i], amplitude_avg, #f2)
             end
+
+            local connections = {}
+            local factor = 1
+
+            table.insert(connections, extra:on("hold", function()
+                
+                if factor < 0.4 then
+                    factor = factor * 0.99
+                else
+                    factor = factor * 0.9
+                end
+
+                for i = 1, #f2 do
+                    PeakSystem.Events:dispatch("data", f2[i] * factor, a2[i] * factor, amplitude_avg * factor, #f2)
+                end
+
+                if factor < 0.01 then
+                    for _, connect in pairs(connections) do
+                        connect:disconnect()
+                    end
+                end
+            end))
+
+            table.insert(InputSystem:once("up", function(key, scancode, isrepeat)
+                if key == "space" then
+                    if factor < 0.01 then
+                        connections[1]:disconnect()
+                    end
+                end
+            end))
         end
     end)
 end
@@ -74,6 +106,10 @@ function PeakSystem:updateSystem()
             -- add char to string buffer
             strbuf = strbuf .. char
         end
+    end
+
+    if love.keyboard.isDown("space") then
+        extra:dispatch("hold")
     end
 end
 
