@@ -40,6 +40,7 @@ local function apply_shader(shaderObject, params)
     for paramName, paramValue in pairs(params) do
         if paramName ~= "name" then
             if shaderObject:hasUniform(paramName) then
+                print(paramName)
                 shaderObject:send(paramName, paramValue)
             end
         end

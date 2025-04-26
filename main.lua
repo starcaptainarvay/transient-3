@@ -13,6 +13,7 @@ local AttackSystem = require("systems.AttackSystem")
 local MusicInterpreter = require("systems.MusicInterpreter")
 
 local ParticleSystem = require("systems.animations.ParticleSystem")
+local FireSystem = require("systems.animations.FireSystem")
 local FractalExplosion = require("systems.animations.FractalExplosion")
 local EmissionManager = require("systems.animations.EmissionManager")
 

@@ -93,6 +93,10 @@ function NoteSystem:update(component, entity)
         --     )
         -- end
 
+        if event.count > 2 then
+            NoteSystemEvents:dispatch("imagine-effect-fire", event.count)
+        end
+
         NoteSystemEvents:dispatch("note-stream", love.timer.getTime(), component.midi, pitch, amplitude, amplitude_avg, count)
         NoteSystemEvents:dispatch("will-effect-amplitude", event.amplitude_avg)
     end
