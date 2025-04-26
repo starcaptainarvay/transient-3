@@ -4,6 +4,8 @@ local vector = require("src.math.Vector")
 local dict = require("transient.util.dict")
 
 local NoteSystem = t3.system("Note")
+local MusicInterpreter = t3.system("MusicInterpreter")
+local AttackSystem = t3.system("Attack")
 local FractalExplosion = t3.system("Animation:FractalExplosion")
 local RenderSystem = t3.system("Render")
 
@@ -14,7 +16,7 @@ local function amplitude_to_gain(amplitude)
 end
 
 function FractalExplosion:initSystem()
-    NoteSystem:on("fractal-explosion", function(entity, midi, pitch, amplitude, color)
+    AttackSystem:on("attack", function(entity, midi, pitch, amplitude, color)
         color = color or { math.random(), math.random(), math.random(), 1 }
 
         if activeExplosions[midi] then
@@ -29,6 +31,8 @@ function FractalExplosion:initSystem()
             pitch = pitch,
             color = color
         })
+
+        -- print("epxloded")
     end)
 end
 
@@ -62,7 +66,7 @@ function FractalExplosion:init(component, entity)
             gain = component.gain
         },
         intensity = math.random() * 10,
-        argv = { 0, { 0, 0, 0, 0 }, component.color }
+        argv = { 0, { 0, 0, 0, 0 }, MusicInterpreter.colorBucket:get() }
     })
 end
 

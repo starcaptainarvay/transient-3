@@ -86,12 +86,12 @@ function NoteSystem:update(component, entity)
             })
         end
 
-        if amplitude > 6000 then
-            NoteSystemEvents:dispatch(
-                "fractal-explosion", entity,
-                component.midi, pitch, amplitude
-            )
-        end
+        -- if amplitude > 6000 then
+        --     NoteSystemEvents:dispatch(
+        --         "fractal-explosion", entity,
+        --         component.midi, pitch, amplitude
+        --     )
+        -- end
 
         NoteSystemEvents:dispatch("note-stream", love.timer.getTime(), component.midi, pitch, amplitude, amplitude_avg, count)
         NoteSystemEvents:dispatch("will-effect-amplitude", event.amplitude_avg)
