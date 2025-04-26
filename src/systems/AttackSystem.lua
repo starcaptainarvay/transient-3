@@ -8,7 +8,8 @@ local NoteSystem = t3.system("Note")
 local MIDI_START = 21
 local MIDI_END = 108
 
-local ATTACK_SUM_THRESHOLD = 1 -- TODO tune this threshold
+local ATTACK_SUM_THRESHOLD = 4 -- TODO tune this threshold
+local AMP_DELTA_SCALING = 2*10^3 -- TODO tune this value
 
 local midi_note_last_amplitudes = {}
 local midi_note_attack_sums = {}
@@ -47,7 +48,7 @@ function AttackSystem:initSystem()
                 amplitude = amplitude,
                 amplitude_avg = amplitude_avg,
                 count = count,
-                death_timestamp = love.timer.getTime() + ampDelta / 10^3, -- convert about 30,000 to 300 ms (0.3s)
+                death_timestamp = love.timer.getTime() + ampDelta / AMP_DELTA_SCALING, -- convert about 30,000 to 300 ms (0.3s)? but then 1000 --> 10ms...
                 timestamp = love.timer.getTime()
             })
     
