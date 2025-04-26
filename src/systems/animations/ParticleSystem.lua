@@ -3,7 +3,9 @@ local wf = require("workflower")
 local vector = require("src.math.Vector")
 local dict = require("transient.util.dict")
 
+
 local ROOT_PATH = "assets/textures/%s"
+local EmissionManager = t3.system("Emission")
 local NoteSystem = t3.system("Note")
 local ParticleSystem = t3.system("Particle")
 local RenderSystem = t3.system("Render")
@@ -21,6 +23,14 @@ end
 
 function ParticleSystem:initSystem()
     local ParticleSystemLocalEntity = t3.entity()
+    NoteSystem:on("will-effect-amplitude", function(data)
+        if data <= 100 then return end
+
+        t3.addComponent(ParticleSystemLocalEntity, "Emission", {
+            emissionRate = math.floor(data / 50),
+            expiry = 0.5
+        })
+    end)
 
     local textures = dict.flat(dict.echo({
         "particle_texture_1.png",
@@ -28,9 +38,7 @@ function ParticleSystem:initSystem()
         "particle_texture_3.png",
         "particle_texture_4.png",
         "particle_texture_5.png"
-    }, 30))
-
-
+    }, 10))
 
     for _, particleSystemComponent in pairs(dict.map(textures, function(path)
         return t3.addComponent(ParticleSystemLocalEntity, "Particle", {
@@ -52,26 +60,26 @@ function ParticleSystem:initSystem()
                 amplitudeEffect = 0
             },
             intensity = math.random() * 10,
-            argv = { particleSystemComponent.drawable }
+            argv = { particleSystemComponent.drawable, { 0.1, 0.7, 0.5, 1 } }
         })
 
         NoteSystem:on("willEffect", function(data)
             renderComp.shaderParams.willEffect = data.count
             renderComp.shaderParams.amplitudeEffect = data.amplitude_avg
         end)
-
-        NoteSystem:on("will-effect-amplitude", function(data)
-            particleSystemComponent.drawable:setEmissionRate(math.floor(200 * data)) -- Emit 200 particles per second for a sharp impulse
-        end)
     end
 end
+
+local sizeCurve = {0.5, 1, 2, 4, 8, 6, 3, 0.5}
 
 function ParticleSystem:init(component, entity)
     local ps = love.graphics.newParticleSystem(self.loadTexture(component.texture), component.max)
 
+    local scale = math.random(0.5, 1.5)
+
     ps:setParticleLifetime(0.1, 0.3)
-    ps:setEmissionRate(200) -- Emit 200 particles per second for a sharp impulse
-    ps:setSizes(0.5, 1, 2, 4, 8, 6, 3, 0.5)
+    ps:setEmissionRate(0) -- Emit 200 particles per second for a sharp impul se
+    ps:setSizes(unpack(dict.map(sizeCurve, function(size) return size * scale end)))
     ps:setSizeVariation(1) -- Moderate size variation
     ps:setLinearAcceleration(-50, -50, 50, 50) -- Random acceleration in all directions
     ps:setColors(
@@ -81,13 +89,15 @@ function ParticleSystem:init(component, entity)
         0, 0, 0, 0  -- Fade to transparent
     )
     ps:setSpread(math.pi * 2)
-    ps:setSpeed(100, 2000)
+    ps:setSpeed(150 * scale, 3000 * scale)
     ps:start()
 
     component.drawable = ps
 end
 
 function ParticleSystem:update(component, entity, dt)
+    -- print(EmissionManager:sumTotal())
+    component.drawable:setEmissionRate(EmissionManager:sumTotal() / 10)
     component.drawable:update(dt)
 end
 
