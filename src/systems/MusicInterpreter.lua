@@ -1,67 +1,57 @@
 local t3 = require("transient")
 local wf = require("workflower")
 
+local dict = require("transient.util.dict")
+
 local NoteSystem = t3.system("Note")
 local Interpreter = t3.system("MusicInterpreter")
 
 local buffer, queue = wf.queue()
-local BUFFER_MAX = 50
+local BUFFER_MAX = 60
+
+local function sortAndGroupByTimestamp(array, threshold)
+    table.sort(array, function(a, b) return a.stamp < b.stamp end)
+
+    local grouped = {}
+    local currentGroup = {}
+
+    for i, entry in ipairs(array) do
+        if #currentGroup == 0 then
+            table.insert(currentGroup, entry)
+        else
+            local lastEntry = currentGroup[#currentGroup]
+            -- print(entry.stamp, lastEntry.stamp)
+            if math.abs(entry.stamp - lastEntry.stamp) <= threshold then
+                table.insert(currentGroup, entry)
+            else
+                table.insert(grouped, currentGroup)
+                currentGroup = {entry}
+            end
+        end
+    end
+
+    if #currentGroup > 0 then
+        table.insert(grouped, currentGroup)
+    end
+
+    return grouped
+end
 
 local function calculateHarmonyVector(buffer)
-    if buffer:size() < 2 then
-        return nil -- Not enough data to calculate a vector
+    local buf = buffer:array()
+    local groups = sortAndGroupByTimestamp(buf, 0.3)
+
+    print(#groups)
+
+    for i=1, #groups do
+        print(#groups[i])
     end
-
-    local function calculatePointToPointVector(startNotes, endNotes)
-        local vector = {}
-        for i = 1, 12 do
-            vector[i] = 0
-        end
-
-        for _, note in ipairs(startNotes) do
-            vector[note + 1] = vector[note + 1] - 1
-        end
-
-        for _, note in ipairs(endNotes) do
-            vector[note + 1] = vector[note + 1] + 1
-        end
-
-        return vector
-    end
-
-    local totalVector = {}
-    for i = 1, 12 do
-        totalVector[i] = 0
-    end
-
-    local previousEvent = buffer:get(1)
-
-    for i = 2, buffer:size() do
-        local currentEvent = buffer:get(i)
-
-        local startNotes = previousEvent.midi % 12
-        local endNotes = currentEvent.midi % 12
-
-        local pointVector = calculatePointToPointVector(startNotes, endNotes)
-        for j = 1, 12 do
-            totalVector[j] = totalVector[j] + pointVector[j]
-        end
-
-        previousEvent = currentEvent
-    end
-
-    -- Average the vector over the number of transitions
-    local numTransitions = buffer:size() - 1
-    for i = 1, 12 do
-        totalVector[i] = totalVector[i] / numTransitions
-    end
-
-    return totalVector
 end
 
 function Interpreter:initSystem()
-    NoteSystem:on("note-stream", function(midi, frequency, amplitude, amplitude_avg, count)
+    NoteSystem:on("note-stream", function(timestamp, midi, frequency, amplitude, amplitude_avg, count)
         queue({
+            stamp = timestamp,
             midi = midi,
             frequency = frequency,
             amplitude = amplitude,
