@@ -77,8 +77,6 @@ function NoteSystem:update(component, entity)
         local pitch, amplitude, amplitude_avg, count = event.frequency, event.amplitude, event.amplitude_avg, event.count
         -- print("Got pitch: " .. pitch .. " and amplitude " .. amplitude .. " -- midi = " .. component.midi .. " count = " .. count)
 
-        print(event.amplitude_avg)
-
         if component.midi < 38 then
             NoteSystemEvents:dispatch("bass-border", entity, {
                 type = "note",
@@ -95,6 +93,7 @@ function NoteSystem:update(component, entity)
             )
         end
 
+        NoteSystemEvents:dispatch("note-stream", love.timer.getTime(), component.midi, pitch, amplitude, amplitude_avg, count)
         NoteSystemEvents:dispatch("will-effect-amplitude", event.amplitude_avg)
     end
 end

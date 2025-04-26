@@ -10,6 +10,7 @@ local socketSystem = require("systems.SocketSystem")
 local PeakSystem = require("systems.PeakSystem")
 local NoteSystem = require("systems.NoteSystem")
 local AttackSystem = require("systems.AttackSystem")
+local MusicInterpreter = require("systems.MusicInterpreter")
 
 local ParticleSystem = require("systems.animations.ParticleSystem")
 local FractalExplosion = require("systems.animations.FractalExplosion")
