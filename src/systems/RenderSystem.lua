@@ -14,6 +14,8 @@ local InputSystem = t3.system("Input") -- import InputSystem
 local RenderSystem = t3.system("Render")
 local renderQueue, renderQueueCell
 
+local INVERT_CENTER_Y = vector.new(1, -1)
+
 --[[ ADJUSTABLE BOUNDS: ]]
 
     local AdjustingOn, setAdjustingOn = wf.bucket(nil, false)
@@ -127,7 +129,11 @@ function RenderSystem:update(component, entity)
 
         if component.position then
             -- Adjust position to center the anchor point
-            renderObject.position = component.position - (component.size / 2)
+            if component.size.magnitude > 0 then
+                renderObject.position = component.position - (component.size / 2)
+            else
+                renderObject.position = component.position
+            end
         end
     elseif component.position then
         renderObject.position = component.position
@@ -135,7 +141,7 @@ function RenderSystem:update(component, entity)
 
     -- Convert position to absolute coordinates before queuing
     if renderObject.position then
-        renderObject.position = renderObject.position + center + offset
+        renderObject.position = renderObject.position + center
     end
 
     if component.shaders then
@@ -190,26 +196,14 @@ function RenderSystem:updateSystem(dt)
             RenderSystem.DebugBoundingRect.argv[2] = {1, .7, .2, 1}
         end
 
-        -- print(dimensions, offset, center)
-
         RenderSystem.DebugBoundingRect.size = dimensions
-
-        -- renderQueueCell({ {
-        --     position = vector.new(),
-        --     size = dimensions
-        --     -- shaders = {
-        --     --     test = {
-        --     --         name = "test",
-        --     --         tick = os.time() % 10
-        --     --     }
-        --     -- }
-        -- }, "rect", 10})
-
-        self:update(RenderSystem.DebugBoundingRect, RenderSystem.DebugBoundingRect.entity, dt)
-        self:update(RenderSystem.DebugCenterDot, RenderSystem.DebugCenterDot.entity, dt)
+        center = (dimensions/2):floor() + offset
     end
 
-    center = (dimensions/2):floor() + offset
+    -- if AdjustingOn:get() then
+    --     self:update(RenderSystem.DebugBoundingRect, RenderSystem.DebugBoundingRect.entity, dt)
+    --     self:update(RenderSystem.DebugCenterDot, RenderSystem.DebugCenterDot.entity, dt)
+    -- end
 end
 
 function RenderSystem.drawTexture(settings, object, ...)
