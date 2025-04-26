@@ -49,6 +49,7 @@ vec4 noise_effect(vec4 color, Image texture, vec2 texture_coords, vec2 screen_co
 
 vec4 effect(vec4 color, Image texture, vec2 texture_coords, vec2 screen_coords) {
     // Normalize screen coordinates
+    // float ctick = mod(tick, 1.0)/3 + 0.7;
     vec2 uv = screen_coords / vec2(love_ScreenSize.xy);
 
     // Parameters for distortion
@@ -58,15 +59,17 @@ vec4 effect(vec4 color, Image texture, vec2 texture_coords, vec2 screen_coords) 
     float speed = willEffect/10; // Speed of the distortion animation
 
     // Calculate distortion offset
-    float offsetX = sin(uv.y * waveFrequency + tick * speed) * distortionStrength;
-    float offsetY = cos(uv.x * waveFrequency + tick * speed) * distortionStrength;
+    float offsetX = sin(uv.y * waveFrequency + speed * tick) * distortionStrength;
+    float offsetY = cos(uv.x * waveFrequency + speed * tick) * distortionStrength;
 
     // Apply distortion to texture coordinates
     vec2 distortedCoords = texture_coords + vec2(offsetX, offsetY);
 
-    // Sample the texture with distorted coordinates
-    vec4 distortedColor = Texel(texture, distortedCoords);
+    // Clamp the distorted coordinates to prevent tiling
+    vec2 clampedCoords = clamp(distortedCoords, 0.0, 1.0);
 
+    // Sample the texture with clamped coordinates
+    vec4 distortedColor = Texel(texture, clampedCoords);
 
     vec4 noiseColor = noise_effect(color, texture, texture_coords, screen_coords);
     // Return the distorted color

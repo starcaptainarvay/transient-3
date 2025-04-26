@@ -18,7 +18,7 @@ function EmissionManager:init(component, entity)
     component.created = love.timer.getTime()
     component.now = love.timer.getTime()
 
-    component.expiry = component.expiry or 1
+    component.expiry = component.expiry or 5
     component.emissionRate = component.emissionRate or 0
 
     -- print("Made new emissionManager")
@@ -49,7 +49,7 @@ function EmissionManager:updateSystem()
         end
     end
 
-    setEmissions(total * 20)
+    setEmissions(total/2)
 end
 
 return EmissionManager

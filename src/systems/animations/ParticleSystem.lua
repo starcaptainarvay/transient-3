@@ -18,6 +18,7 @@ function ParticleSystem.loadTexture(texturePath)
     end
 
     Textures[texturePath] = love.graphics.newImage(ROOT_PATH:format(texturePath))
+    Textures[texturePath]:setWrap("clamp", "clamp") -- Prevent tiling by clamping texture coordinates
     return Textures[texturePath]
 end
 

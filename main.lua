@@ -12,6 +12,7 @@ local NoteSystem = require("systems.NoteSystem")
 
 local ParticleSystem = require("systems.animations.ParticleSystem")
 local FractalExplosion = require("systems.animations.FractalExplosion")
+local EmissionManager = require("systems.animations.EmissionManager")
 
 local screen, screenData
 local texture = {}
