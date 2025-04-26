@@ -8,7 +8,7 @@ local Interpreter = t3.system("MusicInterpreter")
 
 local buffer, queue = wf.queue()
 local colorBucket, setGlobalColor = wf.bucket(nil, {1,1,1,1})
-local BUFFER_MAX = 10
+local BUFFER_MAX = 25 -- was 60
 
 local function sortAndGroupByTimestamp(array, threshold, ...)
     table.sort(array, function(a, b) return a.stamp < b.stamp end)
