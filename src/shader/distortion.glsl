@@ -73,6 +73,6 @@ vec4 effect(vec4 color, Image texture, vec2 texture_coords, vec2 screen_coords) 
 
     vec4 noiseColor = noise_effect(color, texture, texture_coords, screen_coords);
     // Return the distorted color
-    return distortedColor * color * noiseColor * 3;
+    return distortedColor * color * noiseColor * 1.2;
 }
 
