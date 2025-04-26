@@ -7,7 +7,16 @@ local vector = require("src.math.Vector")
 local FireSystem = t3.system("GroupFire")
 
 local queue, pushToQueue = wf.queue()
-local SCALE = 30
+local SCALE = {
+    ADD = 1,
+    REMOVE = 1,
+}
+
+local function vec_array(vector)
+    return {
+        vector.x, vector.y
+    }
+end
 
 function FireSystem:initSystem()
     local entity = t3.entity()
@@ -18,36 +27,51 @@ function FireSystem:initSystem()
             position = vector.new(0, 0),
             renderable = "fx_rect",
             shaders = { "fire" },
+            intensity = 0,
             shaderParams = {
-                dimensions = Render:getDimensions()
+                dimensions = vec_array(Render:getDimensions())
             },
             argv = {false, false, {0, 0, 0, 0}}
         })
     })
 
     NoteSystem:on("imagine-effect-fire", function(count)
-        for i=1, count * SCALE do
+        for i=1, count * SCALE.ADD do
             pushToQueue({})
         end
     end)
 end
 
+local function getIntensity()
+    local intensity = 0
+
+    if queue:size() > 0 then
+        intensity = math.min(queue:size() / (1000 * SCALE.ADD), 1)
+    end
+
+    return intensity
+end
+
 function FireSystem:update(component, entity)
     local comp = component.renderComp
 
-    comp.shaderParams.dimensions = { Render:getDimensions().x, Render:getDimensions().y }
+    comp.shaderParams.dimensions = vec_array(Render:getDimensions())
     comp.shaderParams.size = Render:getDimensions()
-    comp.shaderParams.intensity = (queue:size()/3) ^ 2
 
-    local intensity = math.min(queue:size() / (10 * SCALE), 1)
+    local intensity = getIntensity()
+    comp.intensity = intensity
+
     comp.argv[3] = {
         intensity, intensity, intensity, intensity
     }
 end
 
 function FireSystem:updateSystem()
-    if queue:size() > 0 then
-        queue:pop()
+    -- print(queue:size())
+    for i=1, SCALE.REMOVE do
+        if queue:size() > 0 then
+            queue:pop()
+        else return end
     end
 end
 

@@ -1,4 +1,5 @@
 extern float tick; // Time in seconds since the start of the shader
+extern float intensity; // Intensity of the flames, ranges from 0 to 1
 extern vec2 dimensions;
 
 vec3 rgb2hsv(vec3 c) {
@@ -47,9 +48,11 @@ vec4 effect(vec4 color, Image texture, vec2 texture_coords, vec2 screen_coords) 
 
     vec2 speed = vec2(1.2, 0.1);
     float shift = 1.327 + sin(tick * 2.0) / 2.4;
-    float alpha = 1.0;
 
-    float dist = 3.5 - sin(tick * 0.4) / 1.89;
+    // Adjust alpha and scale based on a logarithmic map of intensity
+    float logIntensity = log(1.0 + 9.0 * intensity) / log(10.0); // Logarithmic scaling
+    float alpha = smoothstep(0.0, 0.9, logIntensity) * logIntensity;
+    float dist = mix(1.5, 3.5, pow(logIntensity, 2.0));
 
     vec2 p = screen_coords.xy * dist / dimensions.x;
     p.x -= tick / 1.1;
