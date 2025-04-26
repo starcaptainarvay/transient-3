@@ -56,7 +56,7 @@ function NoteSystem:initSystem()
         end
 
         if count >= 3 then
-            print("Will effecting...")
+            -- print("Will effecting...")
             NoteSystemEvents:dispatch("willEffect", {
                 count = count,
                 amplitude_avg = amplitude_avg
@@ -69,7 +69,9 @@ end
 function NoteSystem:update(component, entity)
     for event in component.incomingEvents:consume() do
         local pitch, amplitude, amplitude_avg, count = event.frequency, event.amplitude, event.amplitude_avg, event.count
-        print("Got pitch: " .. pitch .. " and amplitude " .. amplitude .. " -- midi = " .. component.midi .. " count = " .. count)
+        -- print("Got pitch: " .. pitch .. " and amplitude " .. amplitude .. " -- midi = " .. component.midi .. " count = " .. count)
+
+        print(event.amplitude_avg)
 
         if component.midi < 38 then
             NoteSystemEvents:dispatch("bass-border", entity, {
@@ -78,13 +80,16 @@ function NoteSystem:update(component, entity)
                 pitch = pitch,
                 amplitude = amplitude
             })
-        elseif component.midi < 88 then
-            NoteSystemEvents:dispatch("will-effect-amplitude", event.amplitude_avg)
         end
-    end
 
-    if math.random() > 0.995 then
-        NoteSystemEvents:dispatch("fractal-explosion", entity, 73, 440, 5000 + 12000 * math.random())
+        if amplitude > 6000 then
+            NoteSystemEvents:dispatch(
+                "fractal-explosion", entity,
+                component.midi, pitch, amplitude
+            )
+        end
+
+        NoteSystemEvents:dispatch("will-effect-amplitude", event.amplitude_avg)
     end
 end
 

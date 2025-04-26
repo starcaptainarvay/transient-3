@@ -44,15 +44,16 @@ function FractalExplosion:init(component, entity)
     component.intensity = component.gain
 
     component.fractal =  t3.addComponent(entity, "Render", {
-        size = vector.new(
-            RenderSystem:getDimensions().magnitude,
-            RenderSystem:getDimensions().magnitude
-        ),
+        size = RenderSystem:getDimensions(),
+        -- vector.new(
+        --     RenderSystem:getDimensions().magnitude,
+        --     RenderSystem:getDimensions().magnitude
+        -- ),
         position = RenderSystem:getDimensions()
-            * vector.new(0.5, 0.5)
+            * vector.new(0.7, 0.7)
             * vector.new(
                 math.random() - 0.5,
-                math.random() - 0.5
+                (math.random() - 0.5)
             ),
         expiry = component.expiry,
         renderable = "rect",
@@ -63,6 +64,8 @@ function FractalExplosion:init(component, entity)
         intensity = math.random() * 10,
         argv = { 0, { 0, 0, 0, 0 }, component.color }
     })
+
+    print(component.fractal.position)
 end
 
 function FractalExplosion:update(component, entity)
