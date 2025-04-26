@@ -40,7 +40,7 @@ function FractalExplosion:init(component, entity)
     -- print(component.gain)
 
     component.created = love.timer.getTime()
-    component.expiry = 0.8 + component.gain * 0.2
+    component.expiry = 0.4 + component.gain * 0.2
     component.intensity = component.gain
 
     component.fractal =  t3.addComponent(entity, "Render", {
@@ -56,7 +56,7 @@ function FractalExplosion:init(component, entity)
                 (math.random() - 0.5)
             ),
         expiry = component.expiry,
-        renderable = "rect",
+        renderable = "fx_rect",
         shaders = { "outwardFractal" },
         shaderParams = {
             gain = component.gain
@@ -64,8 +64,6 @@ function FractalExplosion:init(component, entity)
         intensity = math.random() * 10,
         argv = { 0, { 0, 0, 0, 0 }, component.color }
     })
-
-    print(component.fractal.position)
 end
 
 function FractalExplosion:update(component, entity)
