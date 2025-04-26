@@ -45,16 +45,19 @@ vec4 vignette(vec4 color, vec2 screen_coords) {
     float radius = 0.75; //1.25; // Adjust for the size of the vignette effect
 
     // Calculate uv based on screen_coords and screen_offset
-    vec2 uv = ((screen_coords - screen_offset) * 2.0 - love_ScreenSize.xy) / love_ScreenSize.y;
+    vec2 uv = (screen_coords - screen_offset) / love_ScreenSize.y;
     float dist = length(uv);
 
-    // Make everything outside the radius fully transparent
+    // Calculate vignette factor with a sharper transition near the edges
+    float vignetteFactor = smoothstep(radius, radius - softness, dist);
+
+    // Force edges to be fully transparent
     if (dist > radius) {
-        return vec4(0.0, 0.0, 0.0, 0.0); // Fully transparent
+        return vec4(0.0, 0.0, 0.0, 0.0);
     }
 
-    float alpha = clamp((radius - dist) / radius, 0.0, 1.0); // Smooth transition based on distance
-    return color * vec4(alpha, alpha, alpha, alpha); // Apply gradient effect
+    // Apply the vignette effect by blending the color with transparency
+    return mix(color, vec4(0.0, 0.0, 0.0, 0.0), vignetteFactor);
 }
 
 vec4 spatialDistortion(vec4 inputColor, vec2 screen_coords) {
