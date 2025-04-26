@@ -2,6 +2,8 @@ extern float tick;
 extern float delta;
 extern float intensity;
 
+#define DIM_COEFF 0.07
+
 vec2 random2(vec2 st) {
     return fract(sin(vec2(dot(st, vec2(127.1, 311.7)), dot(st, vec2(269.5, 183.3)))) * 43758.5453);
 }
@@ -40,6 +42,6 @@ vec4 effect(vec4 color, Image texture, vec2 texture_coords, vec2 screen_coords) 
 
     // Create a mask effect by mixing the noise with the base color
     vec4 noiseColor = vec4(vec3(noise), 1.0);
-    return mix(color, noiseColor, 0.5);
+    return mix(color, noiseColor, 0.5) * DIM_COEFF;
 }
 

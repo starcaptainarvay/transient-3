@@ -5,6 +5,8 @@ extern float intensity;
 // extern int use_delta;
 extern vec2 screen_offset; // Offset of the drawing's origin in screen coordinates
 
+#define DIM_COEFF 0.04
+
 vec3 palette( float t ) {
     vec3 a = vec3(0.5, 0.5, 0.5);
     vec3 b = vec3(0.5, 0.5, 0.5);
@@ -19,7 +21,7 @@ vec4 fractal(vec4 color, Image texture, vec2 texture_coords, vec2 screen_coords)
     vec2 uv0 = uv;
     vec3 finalColor = vec3(0.0);
 
-    float scaled_tick = tick * 5;
+    float scaled_tick = tick * 2.5; // 5
 
     for (float i = 0.0; i < 4.0; i++) {
         uv = (fract(uv * 1.5) - 0.5) * (intensity);
@@ -40,7 +42,7 @@ vec4 fractal(vec4 color, Image texture, vec2 texture_coords, vec2 screen_coords)
 }
 
 vec4 vignette(vec4 color, vec2 screen_coords) {
-    float radius = 1.25; // Adjust for the size of the vignette effect
+    float radius = 0.75; //1.25; // Adjust for the size of the vignette effect
 
     // Calculate uv based on screen_coords and screen_offset
     vec2 uv = ((screen_coords - screen_offset) * 2.0 - love_ScreenSize.xy) / love_ScreenSize.y;
@@ -69,7 +71,7 @@ vec4 spatialDistortion(vec4 inputColor, vec2 screen_coords) {
 }
 
 vec4 fadeOut(vec4 color, float tick) {
-    if (tick > 0.6) {
+    if (tick > 0.4) { // was 0.6
         float fadeFactor = 1.0 - smoothstep(0.6, 1.2, tick);
         return color * vec4(1.0, 1.0, 1.0, fadeFactor);
     }
@@ -87,5 +89,5 @@ vec4 effect(vec4 color, Image texture, vec2 texture_coords, vec2 screen_coords) 
     vec4 vignettedColor = vignette(distortedColor, screen_coords) * 1.5;
 
     // Apply fade-out effect based on tick
-    return fadeOut(vignettedColor, tick);
+    return fadeOut(vignettedColor, tick) * DIM_COEFF;
 }

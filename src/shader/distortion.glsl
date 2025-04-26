@@ -7,6 +7,8 @@ extern float frequency;
 
 #define PI 3.14159265358979323846
 
+#define DIM_COEFF 0.07
+
 vec2 random2(vec2 st) {
     return fract(sin(vec2(dot(st, vec2(127.1, 311.7)), dot(st, vec2(269.5, 183.3)))) * 43758.5453);
 }
@@ -74,6 +76,6 @@ vec4 effect(vec4 color, Image texture, vec2 texture_coords, vec2 screen_coords) 
 
     vec4 noiseColor = noise_effect(color, texture, texture_coords, screen_coords);
     // Return the distorted color
-    return distortedColor * color * noiseColor * vec4(vec3(0.8), 0.2);
+    return distortedColor * color * noiseColor * vec4(vec3(0.8), 0.2) * DIM_COEFF;
 }
 

@@ -9,7 +9,7 @@ local MIDI_START = 21
 local MIDI_END = 108
 
 local ATTACK_SUM_THRESHOLD = 4 -- TODO tune this threshold
-local AMP_DELTA_SCALING = 2*10^3 -- TODO tune this value
+local AMP_DELTA_SCALING = 4*10^1 -- TODO tune this value
 
 local midi_note_last_amplitudes = {}
 local midi_note_attack_sums = {}
@@ -38,7 +38,7 @@ function AttackSystem:initSystem()
         local ampDelta = amplitude - midi_note_last_amplitudes[midi]
         midi_note_last_amplitudes[midi] = amplitude
 
-        if ampDelta > 0 then 
+        if ampDelta > amplitude*3.0/4.0 and amplitude > 3000 and frequency > 0 and amplitude > amplitude_avg then 
             midi_note_attack_sums[midi] = midi_note_attack_sums[midi] + 1
 
             if watchers[midi] then
@@ -48,16 +48,20 @@ function AttackSystem:initSystem()
                 watchers[midi].count = count
             end
 
-            t3.addComponent(noteEntity, "Attack", {
-                type = "datapoint",
-                midi = midi,
-                frequency = frequency,
-                amplitude = amplitude,
-                amplitude_avg = amplitude_avg,
-                count = count,
-                death_timestamp = love.timer.getTime() + ampDelta / AMP_DELTA_SCALING, -- convert about 30,000 to 300 ms (0.3s)? but then 1000 --> 10ms...
-                timestamp = love.timer.getTime()
-            })
+            print("attack on midi " .. midi .. " from freq " .. frequency);
+
+            AttackSystemEvents:dispatch("attack", noteEntity, midi, frequency, amplitude, amplitude_avg, count)
+
+            -- t3.addComponent(noteEntity, "Attack", {
+            --     type = "datapoint",
+            --     midi = midi,
+            --     frequency = frequency,
+            --     amplitude = amplitude,
+            --     amplitude_avg = amplitude_avg,
+            --     count = count,
+            --     death_timestamp = love.timer.getTime() + ampDelta / AMP_DELTA_SCALING, -- convert about 30,000 to 300 ms (0.3s)? but then 1000 --> 10ms...
+            --     timestamp = love.timer.getTime()
+            -- })
     
             -- print("Spun up attack datapoint component at " .. love.timer.getTime() .. " for " .. midi .. " with life time of " .. ampDelta * 10^-5 .. " seconds")
         end
@@ -65,27 +69,27 @@ function AttackSystem:initSystem()
 end
 
 function AttackSystem:update(component, entity)
-    if component.type == "watcher" then
-        -- print(component.frequency, component.amplitude)
-        if midi_note_attack_sums[component.midi] > ATTACK_SUM_THRESHOLD then
-            -- print("Watcher at " .. component.midi .. " above threshold with " .. midi_note_attack_sums[component.midi])
-            if not midi_note_attacked[component.midi] then
-                -- print("Not attacked yet, dispatching event")
-                AttackSystemEvents:dispatch("attack", entity, component.midi, component.frequency, component.amplitude, component.amplitude_avg, component.count)
-                midi_note_attacked[component.midi] = true
-            end     -- else, ignore the fact that we've cleared the threshold because we've already dispatched the event    
-        elseif midi_note_attacked[component.midi] then
-            -- print("Watcher at " .. component.midi .. " below threshold")
-            -- attack has been dispatched and now we've fallen below the threshold
-            midi_note_attacked[component.midi] = false
-        end
-    else -- component.type == "datapoint"
-        if love.timer.getTime() > component.death_timestamp then
-            -- print("Killing attack component at " .. component.midi)
-            t3.removeComponent(entity, component)
-            midi_note_attack_sums[component.midi] = midi_note_attack_sums[component.midi] - 1
-        end
-    end
+    -- if component.type == "watcher" then
+    --     -- print(component.frequency, component.amplitude)
+    --     if midi_note_attack_sums[component.midi] > ATTACK_SUM_THRESHOLD then
+    --         -- print("Watcher at " .. component.midi .. " above threshold with " .. midi_note_attack_sums[component.midi])
+    --         if not midi_note_attacked[component.midi] then
+    --             print("Not attacked yet on midi " .. component.midi .. ", dispatching event")
+    --             -- AttackSystemEvents:dispatch("attack", entity, component.midi, component.frequency, component.amplitude, component.amplitude_avg, component.count)
+    --             midi_note_attacked[component.midi] = true
+    --         end     -- else, ignore the fact that we've cleared the threshold because we've already dispatched the event    
+    --     elseif midi_note_attacked[component.midi] then
+    --         -- print("Watcher at " .. component.midi .. " below threshold")
+    --         -- attack has been dispatched and now we've fallen below the threshold
+    --         midi_note_attacked[component.midi] = false
+    --     end
+    -- else -- component.type == "datapoint"
+    --     if love.timer.getTime() > component.death_timestamp then
+    --         -- print("Killing attack component at " .. component.midi)
+    --         t3.removeComponent(entity, component)
+    --         midi_note_attack_sums[component.midi] = midi_note_attack_sums[component.midi] - 1
+    --     end
+    -- end
 end
 
 function AttackSystem:on(...)

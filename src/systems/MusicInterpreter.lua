@@ -8,7 +8,7 @@ local Interpreter = t3.system("MusicInterpreter")
 
 local buffer, queue = wf.queue()
 local colorBucket, setGlobalColor = wf.bucket(nil, {1,1,1,1})
-local BUFFER_MAX = 60
+local BUFFER_MAX = 10
 
 local function sortAndGroupByTimestamp(array, threshold, ...)
     table.sort(array, function(a, b) return a.stamp < b.stamp end)
@@ -126,7 +126,7 @@ local function mapHarmonyVectorToColor(harmonyVector)
     green = math.min(1, green)
     blue = math.min(1, blue)
 
-    local mod = {(red * blue)/green, (green * red)/blue, (blue * green)/red/red, 1}
+    local mod = {(red * blue)/green, (green * red)/blue, (blue * green)/red--[[/red]], 0.4}
 
     local maxColor = math.max(mod[1], mod[2], mod[3])
 
