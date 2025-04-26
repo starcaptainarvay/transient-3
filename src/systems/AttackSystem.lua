@@ -23,6 +23,7 @@ function AttackSystem:initSystem()
         midi_note_attack_sums[note] = 0
         midi_note_attacked[note] = false
         local noteEntity = NoteSystem:getMidiNoteEntity(note)
+        print("noteEntity", noteEntity)
         t3.addComponent(noteEntity, "Attack", {
             type = "watcher",
             midi = note
@@ -46,7 +47,7 @@ function AttackSystem:initSystem()
                 amplitude = amplitude,
                 amplitude_avg = amplitude_avg,
                 count = count,
-                death_timestamp = love.timer.getTime() + ampDelta / 10, -- convert about 30,000 to 300 ms (0.3s)
+                death_timestamp = love.timer.getTime() + ampDelta / 10^3, -- convert about 30,000 to 300 ms (0.3s)
                 timestamp = love.timer.getTime()
             })
     

@@ -108,6 +108,10 @@ end
 
 function NoteSystem:getMidiNoteEntity(midiNote)
     -- print("Called getMidiNoteEntity with " .. midiNote .. ". returning " .. tostring(midi_note_entities[midiNote]))
+    if not midi_note_entities[midiNote] then
+        print(midiNote, "not found, creating new entity")
+        midi_note_entities[midiNote] = t3.entity()
+    end
     return midi_note_entities[midiNote]
 end
 
