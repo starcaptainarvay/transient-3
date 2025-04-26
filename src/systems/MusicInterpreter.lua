@@ -171,4 +171,6 @@ function Interpreter:updateSystem()
     -- end
 end
 
+Interpreter.colorBucket = colorBucket
+
 return Interpreter

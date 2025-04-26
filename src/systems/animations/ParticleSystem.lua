@@ -6,6 +6,7 @@ local dict = require("transient.util.dict")
 
 local ROOT_PATH = "assets/textures/%s"
 local EmissionManager = t3.system("Emission")
+local MusicInterpreter = t3.system("MusicInterpreter")
 local NoteSystem = t3.system("Note")
 local ParticleSystem = t3.system("Particle")
 local RenderSystem = t3.system("Render")
@@ -67,6 +68,10 @@ function ParticleSystem:initSystem()
             renderComp.shaderParams.willEffect = data.count
             renderComp.shaderParams.amplitudeEffect = data.amplitude_avg
             renderComp.shaderParams.frequency = data.frequency^(1/8)
+        end)
+
+        MusicInterpreter.colorBucket:on("value", function(color)
+            renderComp.argv[2] = color
         end)
     end
 end
