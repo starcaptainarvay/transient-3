@@ -1,5 +1,5 @@
 #define MAX_PEAKS 8
-#define PEAK_MIN_THRESHOLD 1000 // noise is less than this amount? peaks are in the 4-5 digit range
+#define PEAK_MIN_THRESHOLD 200 // noise is less than this amount? peaks are in the 4-5 digit range
 
 //---------------------------------------------------------------------------//
 // Global Variables

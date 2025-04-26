@@ -10,6 +10,8 @@ local MIDI_END = 108
 
 local MIDI_NOTE_QUEUES = {}
 
+local midi_note_entities = {}
+
 -- Helper function to calculate the frequency of a MIDI note
 local function midiToFrequency(note)
     return 440 * (2 ^ ((note - 69) / 12))
@@ -45,6 +47,9 @@ function NoteSystem:initSystem()
         })
 
         MIDI_NOTE_QUEUES[note] = queueIncomingEvent
+
+        midi_note_entities[note] = entity
+
     end
 
     PeakSystem.Events:on("data", function(frequency, amplitude, amplitude_avg, count)
@@ -100,6 +105,11 @@ end
 
 function NoteSystem:once(...)
     return NoteSystemEvents:once(...)
+end
+
+function NoteSystem:getMidiNoteEntity(midiNote)
+    -- print("Called getMidiNoteEntity with " .. midiNote .. ". returning " .. tostring(midi_note_entities[midiNote]))
+    return midi_note_entities[midiNote]
 end
 
 return NoteSystem
